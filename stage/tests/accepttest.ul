@@ -9,7 +9,7 @@ boolean fun1(int a, int[3] b) {
 	char hhh;
 	int[10] asd;
 
-	if (ggg) { }
+	if (fff) { }
 
 	while (fff) { } 
 
@@ -17,8 +17,8 @@ boolean fun1(int a, int[3] b) {
 	println fff;
 
 	ggg = hhh;
-
 	return fff;
+
 }
 
 int fun2(int a, int b) { }

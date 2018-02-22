@@ -162,7 +162,7 @@ public class TypeCheckVisitor implements TypeVisitor
             {
                 String msg = "Return statement must be the last statement in the function.";
                 // TODO: LINE AND OFFSET FOR THIS
-                throw new SemanticException(msg, fb.line, fb.offset);
+                throw new SemanticException(msg, stmt.getLine(), stmt.getOffset());
             }
             else
             {
@@ -229,8 +229,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (!(conditionType instanceof BooleanType))
         {
             String msg = "If statement condition expression must be type boolean. Found (" + conditionType + ").";
-            // TODO: line and offset for this error
-            throw new SemanticException(msg, is.expr.getLine(), is.expr.getOffset());
+            throw new SemanticException(msg, is.getLine(), is.getOffset());
         }
         // System.out.print(")");
         
@@ -251,8 +250,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (!(conditionType instanceof BooleanType))
         {
             String msg = "While statement condition expression must be type boolean. Found (" + conditionType + ").";
-            // TODO: line and offset for this error
-            throw new SemanticException(msg, ws.line, ws.offset);
+            throw new SemanticException(msg, ws.getLine(), ws.getOffset());
         }
 
         // System.out.print(")");
@@ -267,8 +265,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (exprType instanceof VoidType || exprType instanceof ArrayType)
         {
             String msg = "Print statement expression cannot be of type " + exprType + ".";
-            // TODO: line and offset for this error
-            throw new SemanticException(msg, ps.line, ps.offset);
+            throw new SemanticException(msg, ps.getLine(), ps.getOffset());
         }
 
         // System.out.print(";");
@@ -281,8 +278,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (exprType instanceof VoidType || exprType instanceof ArrayType)
         {
             String msg = "Println statement expression cannot be of type " + exprType + ".";
-            // TODO: line and offset for this error
-            throw new SemanticException(msg, pls.line, pls.offset);
+            throw new SemanticException(msg, pls.getLine(), pls.getOffset());
         }
 
         // System.out.print(";");
@@ -299,8 +295,7 @@ public class TypeCheckVisitor implements TypeVisitor
             if (!returnType.getClass().equals(currentFuncReturnType.getClass()))
             {
                 String msg = "Return type does not match function declaration.";
-                // TODO: line and offset for this error
-                throw new SemanticException(msg, rs.line, rs.offset);
+                throw new SemanticException(msg, rs.getLine(), rs.getOffset());
             }
         }
         // System.out.print(";");
