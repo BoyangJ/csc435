@@ -23,4 +23,14 @@ public class SubtractExpression extends Expression
     {
         return v.visit(this);
     }
+
+    public int getLine()
+    {
+        return expr1.getLine();
+    }
+
+    public int getOffset()
+    {
+        return expr1.getOffset();
+    }
 }

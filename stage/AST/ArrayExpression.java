@@ -23,4 +23,14 @@ public class ArrayExpression extends Expression
     {
         return v.visit(this);
     }
+
+    public int getLine()
+    {
+        return expr.getLine();
+    }
+
+    public int getOffset()
+    {
+        return expr.getOffset();
+    }
 }

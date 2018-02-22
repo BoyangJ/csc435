@@ -23,4 +23,14 @@ public class FunctionExpression extends Expression
     {
         return v.visit(this);
     }
+
+    public int getLine()
+    {
+        return eList.elementAt(0).getLine();
+    }
+
+    public int getOffset()
+    {
+        return eList.elementAt(0).getOffset();
+    }
 }

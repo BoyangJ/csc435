@@ -230,7 +230,7 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             String msg = "If statement condition expression must be type boolean. Found (" + conditionType + ").";
             // TODO: line and offset for this error
-            throw new SemanticException(msg, is.expr.line, is.expr.offset);
+            throw new SemanticException(msg, is.expr.getLine(), is.expr.getOffset());
         }
         // System.out.print(")");
         

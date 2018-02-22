@@ -28,4 +28,14 @@ public class BooleanLiteral extends Expression
     {
         return v.visit(this);
     }
+
+    public int getLine()
+    {
+        return line;
+    }
+
+    public int getOffset()
+    {
+        return offset;
+    }
 }
