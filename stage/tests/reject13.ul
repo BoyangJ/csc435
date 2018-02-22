@@ -1,0 +1,6 @@
+// list missing '(' and ')'
+void main () 
+{
+    return list (item1, item2) ;
+    return list item1, item2 ;
+}

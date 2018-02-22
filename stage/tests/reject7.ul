@@ -1,0 +1,6 @@
+// array index must be an integerconstant
+void main ()
+{
+    string[ 10 ] arrayname;
+    string[ ten ] arrayname;
+}

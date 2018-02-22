@@ -1,0 +1,18 @@
+void main() {
+	int[6] a;
+	int b; 
+} 
+
+boolean fun1(int a, int[3] b) {
+	char fff;
+	char ggg;
+
+	ggg = fff;
+	//return fff;
+}
+
+int fun2(int a, int b) { }
+
+boolean fun3() { }
+
+int[3] fun4() { }

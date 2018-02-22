@@ -1,0 +1,11 @@
+// testing Blocks that don’t have ‘{‘
+void main ()
+{
+    while ( true )
+    {
+        print array[20];
+    }
+
+    while ( true ) 
+        print array[20];
+}

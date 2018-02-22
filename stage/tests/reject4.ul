@@ -1,0 +1,4 @@
+// formal parameters cannot end with a ‘,’
+void main ( int[20] array, char character ) { }
+
+void main ( int[20] array, char character, ) { }

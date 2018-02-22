@@ -1,0 +1,6 @@
+// expressions cannot end on an operator
+void main ( ) 
+{
+    operator1 == "operator 2";
+    operator1 == ;
+}
