@@ -4,11 +4,21 @@ void main() {
 } 
 
 boolean fun1(int a, int[3] b) {
-	char fff;
+	boolean fff;
 	char ggg;
+	char hhh;
+	int[10] asd;
 
-	ggg = fff;
-	//return fff;
+	if (ggg) { }
+
+	while (fff) { } 
+
+	print fff;
+	println fff;
+
+	ggg = hhh;
+
+	return fff;
 }
 
 int fun2(int a, int b) { }

@@ -225,40 +225,66 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (IfStatement is) throws SemanticException
     {
         // System.out.print("if (");
-        // is.expr.accept(this);
+        Type conditionType = is.expr.accept(this);
+        if (!(conditionType instanceof BooleanType))
+        {
+            String msg = "If statement condition expression must be type boolean. Found (" + conditionType + ").";
+            // TODO: line and offset for this error
+            throw new SemanticException(msg, is.expr.line, is.expr.offset);
+        }
         // System.out.print(")");
         
-        // is.ifBlock.accept(this);
+        is.ifBlock.accept(this);
 
-        // if (is.elseBlock != null)
-        // {
-        //     printNewLine();
-        //     System.out.print("else");
-
-        //     is.elseBlock.accept(this);
-        // }
+        if (is.elseBlock != null)
+        {
+            // printNewLine();
+            // System.out.print("else");
+            is.elseBlock.accept(this);
+        }
         return null;
     }
     public Type visit (WhileStatement ws) throws SemanticException
     {
         // System.out.print("while (");
-        // ws.expr.accept(this);
+        Type conditionType = ws.expr.accept(this);
+        if (!(conditionType instanceof BooleanType))
+        {
+            String msg = "While statement condition expression must be type boolean. Found (" + conditionType + ").";
+            // TODO: line and offset for this error
+            throw new SemanticException(msg, ws.line, ws.offset);
+        }
+
         // System.out.print(")");
 
-        // ws.block.accept(this);
+        ws.block.accept(this);
         return null;
     }
     public Type visit (PrintStatement ps) throws SemanticException
     {
         // System.out.print("print ");
-        // ps.expr.accept(this);
+        Type exprType = ps.expr.accept(this);
+        if (exprType instanceof VoidType || exprType instanceof ArrayType)
+        {
+            String msg = "Print statement expression cannot be of type " + exprType + ".";
+            // TODO: line and offset for this error
+            throw new SemanticException(msg, ps.line, ps.offset);
+        }
+
         // System.out.print(";");
         return null;
     }
     public Type visit (PrintlnStatement pls) throws SemanticException
     {
         // System.out.print("println ");
-        // pls.expr.accept(this);
+        Type exprType = pls.expr.accept(this);
+        if (exprType instanceof VoidType || exprType instanceof ArrayType)
+        {
+            String msg = "Println statement expression cannot be of type " + exprType + ".";
+            // TODO: line and offset for this error
+            throw new SemanticException(msg, pls.line, pls.offset);
+        }
+
         // System.out.print(";");
         return null;
     }

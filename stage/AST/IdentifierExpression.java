@@ -21,4 +21,14 @@ public class IdentifierExpression extends Expression
     {
         return v.visit(this);
     }
+
+    // public int getLine()
+    // {
+    //     return id.line;
+    // }
+
+    // public int getOffset()
+    // {
+    //     return id.offset;
+    // }
 }
