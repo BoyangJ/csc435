@@ -73,20 +73,9 @@ public class TypeCheckVisitor implements TypeVisitor
         Type returnType = fd.ctype.accept(this);
         fd.name.accept(this);
 
-        // if (!fEnv.inCurrentScope(fd.name.name))
-        // {
-            //fEnv.add(fd.name.name, fd);
-            currentFuncLine = fd.name.line;
-            currentFuncOffset = fd.name.offset;
-        // }
-        // else 
-        // {
-        //     String msg = "A function named " + fd.name.name + " already exists.";
-        //     throw new SemanticException(msg, fd.name.line, fd.name.offset);
-        // }
+        currentFuncLine = fd.name.line;
+        currentFuncOffset = fd.name.offset;
 
-        // System.out.print(" ");
-        // System.out.print(" ");
         Iterator<FormalParameter> itr = fd.params.fpList.iterator();
 
         if (fd.name.name.equals("main"))
@@ -103,8 +92,6 @@ public class TypeCheckVisitor implements TypeVisitor
             }
             hasMain = true;
         }
-
-        // System.out.print("(");
 
         // add Formal Parameters to function's variable environment
         vEnv.beginScope();
@@ -131,21 +118,12 @@ public class TypeCheckVisitor implements TypeVisitor
                 String msg = "A parameter named " + paramName + " already exists.";
                 throw new SemanticException(msg, param.name.line, param.name.offset);
             }
-            // if (itr.hasNext())
-            // {
-            //     System.out.print(", ");
-            // }
         }
-        // System.out.print(")");
+
         return returnType;
     }
     public Type visit (FunctionBody fb) throws SemanticException
     {
-        // printNewLine();
-        // System.out.print("{");
-        // indents++;
-        // printNewLine();
-
         Iterator<VariableDeclaration> itr = fb.vdList.varDeclList.iterator();
         while(itr.hasNext())
         {
@@ -170,7 +148,6 @@ public class TypeCheckVisitor implements TypeVisitor
                 String msg = "A variable or parameter named " + varName + " already exists.";
                 throw new SemanticException(msg, var.name.line, var.name.offset);
             }
-            // printNewLine();
         }
 
         //DEBUG
@@ -189,12 +166,7 @@ public class TypeCheckVisitor implements TypeVisitor
             {
                 stmt.accept(this);
             }
-            // printNewLine();
         }
-
-        // indents--;
-        // System.out.print("\b\b\b\b");
-        // System.out.print("}");
 
         // end the function's variable environment scope
         vEnv.endScope();
@@ -204,7 +176,6 @@ public class TypeCheckVisitor implements TypeVisitor
     {
         Type paramType = fp.ctype.accept(this);
         fp.name.accept(this);
-        // System.out.print(" ");
 
         return paramType;
     }
@@ -212,25 +183,14 @@ public class TypeCheckVisitor implements TypeVisitor
     {
         Type varType = vd.type.accept(this);
         vd.name.accept(this);
-        // System.out.print(" ");
-        // System.out.print(";");
         return varType;
     }
     public Type visit (Identifier i) throws SemanticException
     {
-        // System.out.print(i.name);
         return null;
     }
     public Type visit (TypeNode t) throws SemanticException
     {
-        //System.out.print(t.type);
-        // if (t.index != null)
-        // {
-            // System.out.print("[");
-            // t.index.accept(this);
-            // System.out.print("]");
-        // }
-
         return t.type;
     }
 
@@ -240,33 +200,27 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             es.expr.accept(this);
         }
-        // System.out.print(";");
         return null;
     }
     public Type visit (IfStatement is) throws SemanticException
     {
-        // System.out.print("if (");
         Type conditionType = is.expr.accept(this);
         if (!(conditionType instanceof BooleanType))
         {
             String msg = "If statement condition expression must be type boolean. Found (" + conditionType + ").";
             throw new SemanticException(msg, is.getLine(), is.getOffset());
         }
-        // System.out.print(")");
         
         is.ifBlock.accept(this);
 
         if (is.elseBlock != null)
         {
-            // printNewLine();
-            // System.out.print("else");
             is.elseBlock.accept(this);
         }
         return null;
     }
     public Type visit (WhileStatement ws) throws SemanticException
     {
-        // System.out.print("while (");
         Type conditionType = ws.expr.accept(this);
         if (!(conditionType instanceof BooleanType))
         {
@@ -274,14 +228,11 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, ws.getLine(), ws.getOffset());
         }
 
-        // System.out.print(")");
-
         ws.block.accept(this);
         return null;
     }
     public Type visit (PrintStatement ps) throws SemanticException
     {
-        // System.out.print("print ");
         Type exprType = ps.expr.accept(this);
         if (exprType instanceof VoidType || exprType instanceof ArrayType)
         {
@@ -289,12 +240,10 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, ps.getLine(), ps.getOffset());
         }
 
-        // System.out.print(";");
         return null;
     }
     public Type visit (PrintlnStatement pls) throws SemanticException
     {
-        // System.out.print("println ");
         Type exprType = pls.expr.accept(this);
         if (exprType instanceof VoidType || exprType instanceof ArrayType)
         {
@@ -302,16 +251,13 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, pls.getLine(), pls.getOffset());
         }
 
-        // System.out.print(";");
         return null;
     }
     public Type visit (ReturnStatement rs) throws SemanticException
     {
-        // System.out.print("return");
         Type returnType;
         if (rs.expr != null)
         {
-            // System.out.print(" ");
             returnType = rs.expr.accept(this);
             System.out.println("return type: " + returnType + ", currentfuncreturntype: " + currentFuncReturnType);
             if (!returnType.getClass().equals(currentFuncReturnType.getClass()))
@@ -329,7 +275,6 @@ public class TypeCheckVisitor implements TypeVisitor
                 throw new SemanticException(msg, currentFuncLine, currentFuncOffset);
             }
         }
-        // System.out.print(";");
         return returnType;
     }
     public Type visit (AssignmentStatement as) throws SemanticException
@@ -343,7 +288,6 @@ public class TypeCheckVisitor implements TypeVisitor
         Type varType = vEnv.lookup(as.id.name);
         System.out.println("type of " + as.id.name + " is " + varType);
 
-        // System.out.print(" = ");
         Type exprType = as.expr.accept(this);
         System.out.println("type of expr is " + exprType);
 
@@ -354,7 +298,6 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, as.getLine(), as.getOffset());
 
         }
-        // System.out.print(";");
         return varType;
     }
     public Type visit (ArrayAssignmentStatement aas) throws SemanticException
@@ -369,38 +312,23 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, aas.getLine(), aas.getOffset());
         }
 
-        // System.out.print("[");
-        // aas.index.accept(this);
-        // System.out.print("] = ");
-        // aas.expr.accept(this);
-        // System.out.print(";");
         return varType;
     }
 
     public Type visit (Block b) throws SemanticException
     {
-        // printNewLine();
-        // System.out.print("{");
-        // indents++;
-        // printNewLine();
-
         Iterator<Statement> itr = b.sList.sList.iterator();
         while(itr.hasNext())
         {
             itr.next().accept(this);
-            // printNewLine();
         }
 
-        // indents--;
-        // System.out.print("\b\b\b\b");
-        // System.out.print("}");
         return null;
     }
 
     public Type visit (EqualityExpression e) throws SemanticException
     {
         Type e1Type = e.expr1.accept(this);
-        // System.out.print("==");
         Type e2Type = e.expr2.accept(this);
 
         System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
@@ -426,7 +354,6 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (LessThanExpression e) throws SemanticException
     {
         Type e1Type = e.expr1.accept(this);
-        // System.out.print("<");
         Type e2Type = e.expr2.accept(this);
 
         System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
@@ -452,7 +379,6 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (AddExpression e) throws SemanticException
     {
         Type expr1Type = e.expr1.accept(this);
-        // System.out.print("+");
         Type expr2Type = e.expr2.accept(this);
 
         if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType)
@@ -476,7 +402,6 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (SubtractExpression e) throws SemanticException
     {
         Type expr1Type = e.expr1.accept(this);
-        // System.out.print("+");
         Type expr2Type = e.expr2.accept(this);
 
         if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType)
@@ -501,7 +426,6 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (MultExpression e) throws SemanticException
     {
         Type expr1Type = e.expr1.accept(this);
-        // System.out.print("+");
         Type expr2Type = e.expr2.accept(this);
 
         if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType || expr1Type instanceof CharType)
@@ -525,9 +449,6 @@ public class TypeCheckVisitor implements TypeVisitor
     }
     public Type visit (ParenExpression e) throws SemanticException
     {
-        // System.out.print("(");
-        // e.expr.accept(this);
-        // System.out.print(")");
         return e.expr.accept(this);
     }
     public Type visit (IdentifierExpression e) throws SemanticException
@@ -537,16 +458,10 @@ public class TypeCheckVisitor implements TypeVisitor
             String msg = "Variable " + e.id.name + " is not defined.";
             throw new SemanticException(msg, e.id.line, e.id.offset);
         }
-        // System.out.print(e.name);
         return vEnv.lookup(e.id.name);
     }
     public Type visit (ArrayExpression e) throws SemanticException
     {
-        // System.out.print(e.name);
-        // System.out.print("[");
-        // e.expr.accept(this);
-        // System.out.print("]");
-
         e.id.accept(this);
         if (!vEnv.inCurrentScope(e.id.name))
         {
@@ -572,8 +487,6 @@ public class TypeCheckVisitor implements TypeVisitor
             String msg = "Function " + e.id.name + " is not defined.";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        // System.out.print(e.name);
-        // System.out.print("(");
 
         FunctionDeclaration fd = fEnv.lookup(e.id.name);
         Iterator<FormalParameter> fdItr = fd.params.fpList.iterator();
@@ -595,10 +508,6 @@ public class TypeCheckVisitor implements TypeVisitor
             }
 
             argCounter++;
-        //     if (itr.hasNext())
-        //     {
-        //         System.out.print(", ");
-        //     }
         }
 
         if (fdItr.hasNext())
@@ -612,47 +521,28 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
 
-        // System.out.print(")");
-
         return fd.ctype.type;
     }
 
     public Type visit (IntegerLiteral i) throws SemanticException
     {
-        // System.out.print(i.value);
         return new IntegerType();
     }
     public Type visit (StringLiteral s) throws SemanticException
     {
-        // System.out.print(s.value);
         return new StringType();
     }
     public Type visit (FloatLiteral f) throws SemanticException
     {
-        // System.out.print(f.value);
         return new FloatType();
     }
     public Type visit (CharacterLiteral c) throws SemanticException
     {
-        // System.out.print("'");
-        // System.out.print(c.value);
-        // System.out.print("'");
         return new CharType();
     }
     public Type visit (BooleanLiteral b) throws SemanticException
     {
-        // System.out.print(b.value);
         return new BooleanType();
     }
-
-
-    // private void printNewLine ()
-    // {
-    //     System.out.print("\n");
-    //     for (int i = 0; i < indents*4; i++)
-    //     {
-    //         System.out.print(" ");
-    //     }
-    // }
 
 }
