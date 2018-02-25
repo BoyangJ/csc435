@@ -13,6 +13,8 @@ public class TypeCheckVisitor implements TypeVisitor
 
     private boolean hasMain;
     private Type currentFuncReturnType;
+    private int currentFuncLine;
+    private int currentFuncOffset;
 
     public TypeCheckVisitor()
     {
@@ -46,7 +48,7 @@ public class TypeCheckVisitor implements TypeVisitor
     {
         currentFuncReturnType = f.decl.accept(this);
         f.body.accept(this);
-        return null;
+        return currentFuncReturnType;
     }
     public Type visit (FunctionDeclaration fd) throws SemanticException
     {
@@ -56,6 +58,8 @@ public class TypeCheckVisitor implements TypeVisitor
         if (!fEnv.inCurrentScope(fd.name.name))
         {
             fEnv.add(fd.name.name, fd);
+            currentFuncLine = fd.name.line;
+            currentFuncOffset = fd.name.offset;
         }
         else 
         {
@@ -161,7 +165,6 @@ public class TypeCheckVisitor implements TypeVisitor
             if (stmt instanceof ReturnStatement && itr2.hasNext())
             {
                 String msg = "Return statement must be the last statement in the function.";
-                // TODO: LINE AND OFFSET FOR THIS
                 throw new SemanticException(msg, stmt.getLine(), stmt.getOffset());
             }
             else
@@ -287,10 +290,11 @@ public class TypeCheckVisitor implements TypeVisitor
     public Type visit (ReturnStatement rs) throws SemanticException
     {
         // System.out.print("return");
+        Type returnType;
         if (rs.expr != null)
         {
             // System.out.print(" ");
-            Type returnType = rs.expr.accept(this);
+            returnType = rs.expr.accept(this);
             System.out.println("return type: " + returnType + ", currentfuncreturntype: " + currentFuncReturnType);
             if (!returnType.getClass().equals(currentFuncReturnType.getClass()))
             {
@@ -298,8 +302,17 @@ public class TypeCheckVisitor implements TypeVisitor
                 throw new SemanticException(msg, rs.getLine(), rs.getOffset());
             }
         }
+        else 
+        {
+            returnType = new VoidType();
+            if (!returnType.getClass().equals(currentFuncReturnType.getClass()))
+            {
+                String msg = "Return type does not match function declaration.";
+                throw new SemanticException(msg, currentFuncLine, currentFuncOffset);
+            }
+        }
         // System.out.print(";");
-        return null;
+        return returnType;
     }
     public Type visit (AssignmentStatement as) throws SemanticException
     {
@@ -307,7 +320,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (!vEnv.inCurrentScope(as.id.name))
         {
             String msg = "Variable " + as.id.name + " is not defined.";
-            throw new SemanticException(msg, as.id.line, as.id.offset);
+            throw new SemanticException(msg, as.getLine(), as.getOffset());
         }
         Type varType = vEnv.lookup(as.id.name);
         System.out.println("type of " + as.id.name + " is " + varType);
@@ -320,7 +333,7 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             String msg = "Variable type and assignment expression type do not match. Found ("
                          + exprType + "), requires (" + varType + ").";
-            throw new SemanticException(msg, as.id.line, as.id.offset);
+            throw new SemanticException(msg, as.getLine(), as.getOffset());
 
         }
         // System.out.print(";");
@@ -328,13 +341,22 @@ public class TypeCheckVisitor implements TypeVisitor
     }
     public Type visit (ArrayAssignmentStatement aas) throws SemanticException
     {
-        // aas.name.accept(this);
+        Type varType = aas.arrayExpr.accept(this);
+        Type exprType = aas.expr.accept(this);
+
+        if (!varType.getClass().equals(exprType.getClass()))
+        {
+            String msg = "Array variable type and assignment expression type do not match. Found ("
+                         + exprType + "), requires (" + varType + ").";
+            throw new SemanticException(msg, aas.getLine(), aas.getOffset());
+        }
+
         // System.out.print("[");
         // aas.index.accept(this);
         // System.out.print("] = ");
         // aas.expr.accept(this);
         // System.out.print(";");
-        return null;
+        return varType;
     }
 
     public Type visit (Block b) throws SemanticException
@@ -344,12 +366,12 @@ public class TypeCheckVisitor implements TypeVisitor
         // indents++;
         // printNewLine();
 
-        // Iterator<Statement> itr = b.sList.sList.iterator();
-        // while(itr.hasNext())
-        // {
-        //     itr.next().accept(this);
-        //     printNewLine();
-        // }
+        Iterator<Statement> itr = b.sList.sList.iterator();
+        while(itr.hasNext())
+        {
+            itr.next().accept(this);
+            // printNewLine();
+        }
 
         // indents--;
         // System.out.print("\b\b\b\b");
@@ -359,45 +381,136 @@ public class TypeCheckVisitor implements TypeVisitor
 
     public Type visit (EqualityExpression e) throws SemanticException
     {
-        // e.expr1.accept(this);
+        Type e1Type = e.expr1.accept(this);
         // System.out.print("==");
-        // e.expr2.accept(this);
-        return null;
+        Type e2Type = e.expr2.accept(this);
+
+        System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
+        if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
+        {
+            String msg = "Invalid type for == expression. Found (" + e1Type + ").";
+            throw new SemanticException(msg, e.expr1.getLine(), e.expr1.getOffset());
+        }
+        else if (e2Type instanceof VoidType || e2Type instanceof ArrayType)
+        {
+            String msg = "Invalid type for == expression. Found (" + e2Type + ").";
+            throw new SemanticException(msg, e.expr2.getLine(), e.expr2.getOffset());
+        }
+
+        if (!e1Type.getClass().equals(e2Type.getClass()))
+        {
+            String msg = "Types of == expression must match. Found (" + 
+                         e1Type + ") and (" + e2Type + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        return new BooleanType();
     }
     public Type visit (LessThanExpression e) throws SemanticException
     {
-        // e.expr1.accept(this);
+        Type e1Type = e.expr1.accept(this);
         // System.out.print("<");
-        // e.expr2.accept(this);
-        return null;
+        Type e2Type = e.expr2.accept(this);
+
+        System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
+        if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
+        {
+            String msg = "Invalid type for < expression. Found (" + e1Type + ").";
+            throw new SemanticException(msg, e.expr1.getLine(), e.expr1.getOffset());
+        }
+        else if (e2Type instanceof VoidType || e2Type instanceof ArrayType)
+        {
+            String msg = "Invalid type for < expression. Found (" + e2Type + ").";
+            throw new SemanticException(msg, e.expr2.getLine(), e.expr2.getOffset());
+        }
+
+        if (!e1Type.getClass().equals(e2Type.getClass()))
+        {
+            String msg = "Types of < expression must match. Found (" + 
+                         e1Type + ") and (" + e2Type + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        return new BooleanType();
     }
     public Type visit (AddExpression e) throws SemanticException
     {
-        e.expr1.accept(this);
+        Type expr1Type = e.expr1.accept(this);
         // System.out.print("+");
-        e.expr2.accept(this);
-        return null;
+        Type expr2Type = e.expr2.accept(this);
+
+        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType)
+        {
+            String msg = "Add expression left operand cannot have type " + expr1Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType)
+        {
+            String msg = "Add expression right operand cannot have type " + expr2Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        {
+            String msg = "Add expression operands must have matching types. Found (" 
+                + expr1Type + ") and (" + expr2Type + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        return expr1Type;
     }
     public Type visit (SubtractExpression e) throws SemanticException
     {
-        // e.expr1.accept(this);
-        // System.out.print("-");
-        // e.expr2.accept(this);
-        return null;
+        Type expr1Type = e.expr1.accept(this);
+        // System.out.print("+");
+        Type expr2Type = e.expr2.accept(this);
+
+        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType)
+        {
+            String msg = "Subtract expression left operand cannot have type " + expr1Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType || expr2Type instanceof StringType)
+        {
+            String msg = "Subtract expression right operand cannot have type " + expr2Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        {
+            String msg = "Subtract expression operands must have matching types. Found (" 
+                + expr1Type + ") and (" + expr2Type + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+
+        return expr1Type;
     }
     public Type visit (MultExpression e) throws SemanticException
     {
-        // e.expr1.accept(this);
-        // System.out.print("*");
-        // e.expr2.accept(this);
-        return null;
+        Type expr1Type = e.expr1.accept(this);
+        // System.out.print("+");
+        Type expr2Type = e.expr2.accept(this);
+
+        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType || expr1Type instanceof CharType)
+        {
+            String msg = "Multiply expression left operand cannot have type " + expr1Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType || expr2Type instanceof StringType || expr2Type instanceof CharType)
+        {
+            String msg = "Multiply expression right operand cannot have type " + expr2Type + ".";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        {
+            String msg = "Multiply expression operands must have matching types. Found (" 
+                + expr1Type + ") and (" + expr2Type + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+
+        return expr1Type;
     }
     public Type visit (ParenExpression e) throws SemanticException
     {
         // System.out.print("(");
         // e.expr.accept(this);
         // System.out.print(")");
-        return null;
+        return e.expr.accept(this);
     }
     public Type visit (IdentifierExpression e) throws SemanticException
     {
@@ -415,7 +528,17 @@ public class TypeCheckVisitor implements TypeVisitor
         // System.out.print("[");
         // e.expr.accept(this);
         // System.out.print("]");
-        return null;
+
+        e.id.accept(this);
+        if (!vEnv.inCurrentScope(e.id.name))
+        {
+            String msg = "Array " + e.id.name + " is not defined.";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+
+        ArrayType varArrayType = (ArrayType)vEnv.lookup(e.id.name);
+        return varArrayType.type;
+        
     }
     public Type visit (FunctionExpression e) throws SemanticException
     {

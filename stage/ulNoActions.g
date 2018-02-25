@@ -130,11 +130,11 @@ expressionStatement returns [ExpressionStatement es]:
   ;
 
 assignmentStatement returns [AssignmentStatement as]: 
-  ID '=' e=expr ';' { as = new AssignmentStatement(new Identifier($ID.text), e); }
+  ID '=' e=expr ';' { as = new AssignmentStatement(new Identifier($ID.text, $ID.line, $ID.pos), e); }
   ;
 
 arrayAssignmentStatement returns [ArrayAssignmentStatement aas]: 
-  ID '[' e1=expr ']' '=' e2=expr ';' { aas = new ArrayAssignmentStatement(new Identifier($ID.text), e1, e2); }
+  ID '[' e1=expr ']' '=' e2=expr ';' { aas = new ArrayAssignmentStatement(new ArrayExpression(new Identifier($ID.text, $ID.line, $ID.pos), e1), e2); }
   ;
 
 ifStatement returns [IfStatement is]: 
@@ -207,7 +207,7 @@ atom returns [Expression e]:
   ID { e = new IdentifierExpression(new Identifier($ID.text, $ID.line, $ID.pos)); }
   | l=literal { e = l; }
   | e1=parenExpr { e = e1; }
-  | ID '[' arrayexpr=expr ']' { e = new ArrayExpression($ID.text, arrayexpr); }
+  | ID '[' arrayexpr=expr ']' { e = new ArrayExpression(new Identifier($ID.text, $ID.line, $ID.pos), arrayexpr); }
   | ID '(' funclist=exprList ')' { e = new FunctionExpression($ID.text, funclist); }
   ;
 

@@ -3,25 +3,42 @@ void main() {
 	int b; 
 } 
 
-boolean fun1(int a, int[3] b) {
+int fun1(int a, int[3] b) {
 	boolean fff;
 	char ggg;
 	char hhh;
 	int[10] asd;
 
-	if (fff) { }
+	if ((fff)) { 
+		//return fff;
+		hhh = ggg;
+	}
 
 	while (fff) { } 
 
-	print fff;
-	println fff;
+	print (fff);
+	println (fff);
 
-	ggg = hhh;
-	return fff;
+	fff = ((((fff))));
+	asd[0] = (123);
+
+	((ggg)) == ((((('s')))));
+	hhh < ((((ggg))));
+
+	asd[50];
+
+	hhh + ggg;
+	"asdasd" + "adds";
+	5.3 * 4.8;
+
+	
+
+	return asd[3];
+	//return ((fff));
 
 }
 
-int fun2(int a, int b) { }
+int fun2(int a, int b) { return 22; }
 
 boolean fun3() { }
 

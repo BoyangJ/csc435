@@ -26,11 +26,11 @@ public class AssignmentStatement extends Statement
 
     public int getLine()
     {
-        return expr.getLine();
+        return id.line;
     }
 
     public int getOffset()
     {
-        return expr.getOffset();
+        return id.offset;
     }
 }

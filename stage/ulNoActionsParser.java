@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 ulNoActions.g 2018-02-22 11:56:30
+// $ANTLR 3.0.1 ulNoActions.g 2018-02-24 16:23:10
 
   import AST.*;
   import Types.*;
@@ -965,7 +965,7 @@ public class ulNoActionsParser extends Parser {
             if (failed) return as;
             match(input,28,FOLLOW_28_in_assignmentStatement497); if (failed) return as;
             if ( backtracking==0 ) {
-               as = new AssignmentStatement(new Identifier(ID2.getText()), e); 
+               as = new AssignmentStatement(new Identifier(ID2.getText(), ID2.getLine(), ID2.getCharPositionInLine()), e); 
             }
 
             }
@@ -1013,7 +1013,7 @@ public class ulNoActionsParser extends Parser {
             if (failed) return aas;
             match(input,28,FOLLOW_28_in_arrayAssignmentStatement532); if (failed) return aas;
             if ( backtracking==0 ) {
-               aas = new ArrayAssignmentStatement(new Identifier(ID3.getText()), e1, e2); 
+               aas = new ArrayAssignmentStatement(new ArrayExpression(new Identifier(ID3.getText(), ID3.getLine(), ID3.getCharPositionInLine()), e1), e2); 
             }
 
             }
@@ -1844,7 +1844,7 @@ public class ulNoActionsParser extends Parser {
                     if (failed) return e;
                     match(input,30,FOLLOW_30_in_atom1007); if (failed) return e;
                     if ( backtracking==0 ) {
-                       e = new ArrayExpression(ID5.getText(), arrayexpr); 
+                       e = new ArrayExpression(new Identifier(ID5.getText(), ID5.getLine(), ID5.getCharPositionInLine()), arrayexpr); 
                     }
 
                     }

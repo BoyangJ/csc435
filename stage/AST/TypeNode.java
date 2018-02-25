@@ -17,7 +17,7 @@ public class TypeNode extends ASTNode
     {
         type = t;
         t.type = arrayType;
-        t.index = i.value;
+        t.size = i.value;
 
         line = l;
         offset = o;

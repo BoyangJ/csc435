@@ -5,15 +5,13 @@ import Semantic.*;
 
 public class ArrayAssignmentStatement extends Statement
 {
-    public Identifier name;
-    public Expression index;
+    public ArrayExpression arrayExpr;
     public Expression expr;
 
-    public ArrayAssignmentStatement (Identifier i, Expression e1, Expression e2)
+    public ArrayAssignmentStatement (ArrayExpression ae, Expression e)
     {
-        name = i;
-        index = e1;
-        expr = e2;
+        arrayExpr = ae;
+        expr = e;
     }
 
     public void accept (Visitor v)

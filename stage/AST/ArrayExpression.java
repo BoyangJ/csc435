@@ -5,12 +5,12 @@ import Semantic.*;
 
 public class ArrayExpression extends Expression
 {
-    public String name;
+    public Identifier id;
     public Expression expr;
 
-    public ArrayExpression (String n, Expression e)
+    public ArrayExpression (Identifier i, Expression e)
     {
-        name = n;
+        id = i;
         expr = e;
     }
 

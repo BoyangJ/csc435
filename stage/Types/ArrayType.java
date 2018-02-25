@@ -3,10 +3,10 @@ package Types;
 public class ArrayType extends Type
 {
     public Type type;
-    public int index;
+    public int size;
 
     public String toString()
     {
-        return type.toString() + "[" + index + "]";
+        return type.toString() + "[" + size + "]";
     }
 }

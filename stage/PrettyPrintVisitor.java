@@ -162,9 +162,9 @@ public class PrettyPrintVisitor implements Visitor
     }
     public void visit (ArrayAssignmentStatement aas)
     {
-        aas.name.accept(this);
+        aas.arrayExpr.accept(this);
         System.out.print("[");
-        aas.index.accept(this);
+        //aas.index.accept(this);
         System.out.print("] = ");
         aas.expr.accept(this);
         System.out.print(";");
@@ -231,7 +231,7 @@ public class PrettyPrintVisitor implements Visitor
     }
     public void visit (ArrayExpression e)
     {
-        System.out.print(e.name);
+        System.out.print(e.id.name);
         System.out.print("[");
         e.expr.accept(this);
         System.out.print("]");
