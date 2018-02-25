@@ -32,6 +32,24 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, p.line, p.offset);
         }
 
+        // Add all function declarations to the function environment.
+        while(itr.hasNext())
+        {
+            FunctionDeclaration fd = itr.next().decl;
+
+            if (!fEnv.inCurrentScope(fd.name.name))
+            {
+                fEnv.add(fd.name.name, fd);
+            }
+            else 
+            {
+                String msg = "A function named " + fd.name.name + " already exists.";
+                throw new SemanticException(msg, fd.name.line, fd.name.offset);
+            }
+        }
+
+        // Type check every function
+        itr = p.functionList.iterator();
         while(itr.hasNext())
         {
             itr.next().accept(this);
@@ -55,17 +73,17 @@ public class TypeCheckVisitor implements TypeVisitor
         Type returnType = fd.ctype.accept(this);
         fd.name.accept(this);
 
-        if (!fEnv.inCurrentScope(fd.name.name))
-        {
-            fEnv.add(fd.name.name, fd);
+        // if (!fEnv.inCurrentScope(fd.name.name))
+        // {
+            //fEnv.add(fd.name.name, fd);
             currentFuncLine = fd.name.line;
             currentFuncOffset = fd.name.offset;
-        }
-        else 
-        {
-            String msg = "A function named " + fd.name.name + " already exists.";
-            throw new SemanticException(msg, fd.name.line, fd.name.offset);
-        }
+        // }
+        // else 
+        // {
+        //     String msg = "A function named " + fd.name.name + " already exists.";
+        //     throw new SemanticException(msg, fd.name.line, fd.name.offset);
+        // }
 
         // System.out.print(" ");
         // System.out.print(" ");
@@ -542,21 +560,54 @@ public class TypeCheckVisitor implements TypeVisitor
     }
     public Type visit (FunctionExpression e) throws SemanticException
     {
+        if (!fEnv.inCurrentScope(e.id.name))
+        {
+            String msg = "Function " + e.id.name + " is not defined.";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
         // System.out.print(e.name);
         // System.out.print("(");
+
+        FunctionDeclaration fd = fEnv.lookup(e.id.name);
+        Iterator<FormalParameter> fdItr = fd.params.fpList.iterator();
         
-        // Iterator<Expression> itr = e.eList.eList.iterator();
-        // while(itr.hasNext())
-        // {
-        //     itr.next().accept(this);
+        Iterator<Expression> itr = e.eList.eList.iterator();
+        int argCounter = 0;
+        while(fdItr.hasNext() && itr.hasNext())
+        {
+            Expression argument = itr.next();
+            Type argType = argument.accept(this);
+
+            Type paramType = fdItr.next().ctype.type;
+
+            if (!argType.getClass().equals(paramType.getClass()))
+            {
+                String msg = "Argument " + argCounter + " type does not match function declaration. Found ("
+                    + argType + "), requires (" + paramType + ").";
+                throw new SemanticException(msg, argument.getLine(), argument.getOffset());
+            }
+
+            argCounter++;
         //     if (itr.hasNext())
         //     {
         //         System.out.print(", ");
         //     }
-        // }
+        }
+
+        if (fdItr.hasNext())
+        {
+            String msg = "Function call requires more parameters.";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+        else if (itr.hasNext())
+        {
+            String msg = "Function call has too many parameters.";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
 
         // System.out.print(")");
-        return null;
+
+        return fd.ctype.type;
     }
 
     public Type visit (IntegerLiteral i) throws SemanticException

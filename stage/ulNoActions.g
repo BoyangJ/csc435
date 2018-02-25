@@ -208,7 +208,7 @@ atom returns [Expression e]:
   | l=literal { e = l; }
   | e1=parenExpr { e = e1; }
   | ID '[' arrayexpr=expr ']' { e = new ArrayExpression(new Identifier($ID.text, $ID.line, $ID.pos), arrayexpr); }
-  | ID '(' funclist=exprList ')' { e = new FunctionExpression($ID.text, funclist); }
+  | ID '(' funclist=exprList ')' { e = new FunctionExpression(new Identifier($ID.text, $ID.line, $ID.pos), funclist); }
   ;
 
 literal returns [Expression e]: 

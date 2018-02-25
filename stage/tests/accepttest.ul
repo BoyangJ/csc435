@@ -3,6 +3,7 @@ void main() {
 	int b; 
 } 
 
+
 int fun1(int a, int[3] b) {
 	boolean fff;
 	char ggg;
@@ -31,7 +32,7 @@ int fun1(int a, int[3] b) {
 	"asdasd" + "adds";
 	5.3 * 4.8;
 
-	
+	fun2(3,9999);
 
 	return asd[3];
 	//return ((fff));
@@ -39,6 +40,7 @@ int fun1(int a, int[3] b) {
 }
 
 int fun2(int a, int b) { return 22; }
+
 
 boolean fun3() { }
 

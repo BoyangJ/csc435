@@ -5,12 +5,12 @@ import Semantic.*;
 
 public class FunctionExpression extends Expression
 {
-    public String name;
+    public Identifier id;
     public ExpressionList eList;
 
-    public FunctionExpression (String n, ExpressionList el)
+    public FunctionExpression (Identifier i, ExpressionList el)
     {
-        name = n;
+        id = i;
         eList = el;
     }
 
@@ -26,11 +26,11 @@ public class FunctionExpression extends Expression
 
     public int getLine()
     {
-        return eList.elementAt(0).getLine();
+        return id.line;
     }
 
     public int getOffset()
     {
-        return eList.elementAt(0).getOffset();
+        return id.offset;
     }
 }

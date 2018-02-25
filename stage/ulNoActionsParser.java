@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 ulNoActions.g 2018-02-24 16:23:10
+// $ANTLR 3.0.1 ulNoActions.g 2018-02-24 18:33:33
 
   import AST.*;
   import Types.*;
@@ -1861,7 +1861,7 @@ public class ulNoActionsParser extends Parser {
                     if (failed) return e;
                     match(input,24,FOLLOW_24_in_atom1023); if (failed) return e;
                     if ( backtracking==0 ) {
-                       e = new FunctionExpression(ID6.getText(), funclist); 
+                       e = new FunctionExpression(new Identifier(ID6.getText(), ID6.getLine(), ID6.getCharPositionInLine()), funclist); 
                     }
 
                     }

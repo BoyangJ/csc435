@@ -238,7 +238,7 @@ public class PrettyPrintVisitor implements Visitor
     }
     public void visit (FunctionExpression e)
     {
-        System.out.print(e.name);
+        System.out.print(e.id.name);
         System.out.print("(");
         
         Iterator<Expression> itr = e.eList.eList.iterator();
