@@ -1,0 +1,14 @@
+// testing mismatched braces and brackets
+void main () 
+{
+    if ( array [1] )
+    {
+        "hello";
+    }
+
+    if ( array [1) ] 
+    {
+        "hello";
+    }
+
+}

@@ -1,0 +1,10 @@
+// ID cannot be one of the type keywords
+int not_a_type() { }
+
+int int()
+{
+    // characters that do no match grammar
+    !@#$%^&
+    >~`  
+
+}

@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 ulNoActions.g 2018-02-24 18:33:33
+// $ANTLR 3.0.1 ulNoActions.g 2018-02-24 20:27:59
 
   import AST.*;
   import Types.*;
@@ -63,7 +63,7 @@ public class ulNoActionsParser extends Parser {
 
 
     // $ANTLR start program
-    // ulNoActions.g:35:1: program returns [Program p] : (f= function )+ EOF ;
+    // ulNoActions.g:35:1: program returns [Program p] : (f= function )* EOF ;
     public final Program program() throws RecognitionException {
         Program p = null;
 
@@ -74,11 +74,10 @@ public class ulNoActionsParser extends Parser {
           p = new Program();
 
         try {
-            // ulNoActions.g:40:3: ( (f= function )+ EOF )
-            // ulNoActions.g:40:5: (f= function )+ EOF
+            // ulNoActions.g:40:3: ( (f= function )* EOF )
+            // ulNoActions.g:40:5: (f= function )* EOF
             {
-            // ulNoActions.g:40:5: (f= function )+
-            int cnt1=0;
+            // ulNoActions.g:40:5: (f= function )*
             loop1:
             do {
                 int alt1=2;
@@ -105,13 +104,8 @@ public class ulNoActionsParser extends Parser {
             	    break;
 
             	default :
-            	    if ( cnt1 >= 1 ) break loop1;
-            	    if (backtracking>0) {failed=true; return p;}
-                        EarlyExitException eee =
-                            new EarlyExitException(1, input);
-                        throw eee;
+            	    break loop1;
                 }
-                cnt1++;
             } while (true);
 
             match(input,EOF,FOLLOW_EOF_in_program52); if (failed) return p;

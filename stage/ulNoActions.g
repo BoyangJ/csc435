@@ -37,7 +37,7 @@ program returns [Program p]
 {
   p = new Program();
 }
-  : ( f=function { p.addElement(f); } )+ EOF 
+  : ( f=function { p.addElement(f); } )* EOF 
   ;
 
 function returns [Function f]:

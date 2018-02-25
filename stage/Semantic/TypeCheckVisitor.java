@@ -554,6 +554,13 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
 
+        Type indexType = e.expr.accept(this);
+        if (!(indexType instanceof IntegerType))
+        {
+            String msg = "Array index must be (int). Found (" + indexType + ").";
+            throw new SemanticException(msg, e.getLine(), e.getOffset());
+        }
+
         ArrayType varArrayType = (ArrayType)vEnv.lookup(e.id.name);
         return varArrayType.type;
         

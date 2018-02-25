@@ -1,0 +1,6 @@
+// testing statements that don’t end with ‘;’
+void main ()
+{
+    print array[20];
+    print array[20] 
+}

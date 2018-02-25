@@ -1,0 +1,6 @@
+// list of expressions cannot end with a ','
+void main ( ) 
+{
+    identifier ( item1, "item 2", 3, another_list(3, 4, 5), 'c');
+    identifier ( item1, "item 2", 3, another_list(3, 4, 5), ) ;
+}

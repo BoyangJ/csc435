@@ -1,0 +1,4 @@
+// ID cannot start with a number
+void main ( ) { } 
+
+void 10main ( ) { }
