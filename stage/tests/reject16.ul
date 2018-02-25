@@ -1,6 +1,0 @@
-// charconstants cannot be empty
-void main () 
-{
-    'a';
-    '';
-} 

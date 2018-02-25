@@ -1,6 +1,0 @@
-// id = expr ; except with a statement instead of expr
-void main ( ) 
-{
-    identifier = expr ;
-    identifier = if ( expr ) { } ;
-}

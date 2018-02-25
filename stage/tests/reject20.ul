@@ -1,6 +1,0 @@
-// two operators cannot be adjacent (must be separated by expressions)
-void main ( )
-{
-    1 + '8' * "four" - ( 16.2 );
-    1 + '8' * - ( 16.2 );
-} 

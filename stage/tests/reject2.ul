@@ -1,4 +1,0 @@
-// function must have ‘(‘ formalParameters ‘)’
-void main ( ) { } 
-
-void main { } 

@@ -1,6 +1,0 @@
-// list using ‘[‘ instead of ‘(‘
-void main () 
-{
-    println list( 3, 4, 5, 6 ) ;
-    println list[ 3, 4, 5, 6 ] ;
-}

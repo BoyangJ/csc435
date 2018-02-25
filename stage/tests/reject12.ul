@@ -1,6 +1,0 @@
-// using braces instead of brackets for arrays
-void main () 
-{
-    array [ 10 ] ;
-    array { 10 } ;
-}

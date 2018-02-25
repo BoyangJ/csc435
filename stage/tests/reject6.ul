@@ -1,4 +1,0 @@
-// Testing types that aren’t in the grammar
-void main ( int number ) { }
-
-void main ( double number ) { }

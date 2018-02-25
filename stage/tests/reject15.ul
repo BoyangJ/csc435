@@ -1,6 +1,0 @@
-// char constants cannot have more than one character
-void main ( )
-{
-    'a';
-    'ab';
-}

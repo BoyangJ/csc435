@@ -1,6 +1,0 @@
-// id [ expr ] = expr ; except with statement instead of expr
-void main ( )
-{
-    identifier [ "string" < 3 ] = list(1, 2, 3, '4');
-    identifier [ "string" < 3 ] = return ;
-}

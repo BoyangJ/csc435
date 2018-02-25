@@ -1,6 +1,0 @@
-// float constants must have digits before and after the '.'
-void main ( )
-{
-    1.5;
-    .66;
-}
