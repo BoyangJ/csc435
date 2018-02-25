@@ -7,7 +7,6 @@ import Environment.*;
 
 public class TypeCheckVisitor implements TypeVisitor
 {
-    //private int indents;
     ListEnvironment<String,FunctionDeclaration> fEnv;
     ListEnvironment<String,Type> vEnv;
 
@@ -151,7 +150,7 @@ public class TypeCheckVisitor implements TypeVisitor
         }
 
         //DEBUG
-        System.out.println("current vEnv: " + vEnv);
+        //System.out.println("current vEnv: " + vEnv);
 
         Iterator<Statement> itr2 = fb.sList.sList.iterator();
         while(itr2.hasNext())
@@ -259,7 +258,7 @@ public class TypeCheckVisitor implements TypeVisitor
         if (rs.expr != null)
         {
             returnType = rs.expr.accept(this);
-            System.out.println("return type: " + returnType + ", currentfuncreturntype: " + currentFuncReturnType);
+            //System.out.println("return type: " + returnType + ", currentfuncreturntype: " + currentFuncReturnType);
             if (!returnType.getClass().equals(currentFuncReturnType.getClass()))
             {
                 String msg = "Return type does not match function declaration.";
@@ -286,10 +285,10 @@ public class TypeCheckVisitor implements TypeVisitor
             throw new SemanticException(msg, as.getLine(), as.getOffset());
         }
         Type varType = vEnv.lookup(as.id.name);
-        System.out.println("type of " + as.id.name + " is " + varType);
+        //System.out.println("type of " + as.id.name + " is " + varType);
 
         Type exprType = as.expr.accept(this);
-        System.out.println("type of expr is " + exprType);
+        //System.out.println("type of expr is " + exprType);
 
         if (!varType.getClass().equals(exprType.getClass()))
         {
@@ -331,7 +330,7 @@ public class TypeCheckVisitor implements TypeVisitor
         Type e1Type = e.expr1.accept(this);
         Type e2Type = e.expr2.accept(this);
 
-        System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
+        //System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
         if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
         {
             String msg = "Invalid type for == expression. Found (" + e1Type + ").";
@@ -356,7 +355,7 @@ public class TypeCheckVisitor implements TypeVisitor
         Type e1Type = e.expr1.accept(this);
         Type e2Type = e.expr2.accept(this);
 
-        System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
+        //System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
         if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
         {
             String msg = "Invalid type for < expression. Found (" + e1Type + ").";
