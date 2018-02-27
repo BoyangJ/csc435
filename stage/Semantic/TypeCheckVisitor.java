@@ -36,7 +36,15 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             FunctionDeclaration fd = itr.next().decl;
 
-            if (!fEnv.inCurrentScope(fd.name.name))
+            if (fd.ctype.type instanceof ArrayType)
+            {
+                if (fd.ctype.type.type instanceof VoidType)
+                {
+                    String msg = "Function return type cannot be (" + fd.ctype.type + ").";
+                    throw new SemanticException(msg, fd.name.line, fd.name.offset);
+                }
+            }
+            else if (!fEnv.inCurrentScope(fd.name.name))
             {
                 fEnv.add(fd.name.name, fd);
             }
@@ -330,7 +338,6 @@ public class TypeCheckVisitor implements TypeVisitor
         Type e1Type = e.expr1.accept(this);
         Type e2Type = e.expr2.accept(this);
 
-        //System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
         if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
         {
             String msg = "Invalid type for == expression. Found (" + e1Type + ").";
@@ -340,6 +347,12 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             String msg = "Invalid type for == expression. Found (" + e2Type + ").";
             throw new SemanticException(msg, e.expr2.getLine(), e.expr2.getOffset());
+        }
+        // Bonus: allow (float) == (int) and vice versa
+        else if ((e1Type instanceof IntegerType && e2Type instanceof FloatType)
+                || (e1Type instanceof FloatType && e2Type instanceof IntegerType))
+        {
+            return new BooleanType();
         }
 
         if (!e1Type.getClass().equals(e2Type.getClass()))
@@ -355,7 +368,6 @@ public class TypeCheckVisitor implements TypeVisitor
         Type e1Type = e.expr1.accept(this);
         Type e2Type = e.expr2.accept(this);
 
-        //System.out.println("e1type = " + e1Type + ", e2type = " + e2Type);
         if (e1Type instanceof VoidType || e1Type instanceof ArrayType)
         {
             String msg = "Invalid type for < expression. Found (" + e1Type + ").";
@@ -365,6 +377,12 @@ public class TypeCheckVisitor implements TypeVisitor
         {
             String msg = "Invalid type for < expression. Found (" + e2Type + ").";
             throw new SemanticException(msg, e.expr2.getLine(), e.expr2.getOffset());
+        }
+        // Bonus: allow (float) < (int) and vice versa
+        else if ((e1Type instanceof IntegerType && e2Type instanceof FloatType)
+                || (e1Type instanceof FloatType && e2Type instanceof IntegerType))
+        {
+            return new BooleanType();
         }
 
         if (!e1Type.getClass().equals(e2Type.getClass()))
@@ -377,74 +395,110 @@ public class TypeCheckVisitor implements TypeVisitor
     }
     public Type visit (AddExpression e) throws SemanticException
     {
-        Type expr1Type = e.expr1.accept(this);
-        Type expr2Type = e.expr2.accept(this);
+        Type e1Type = e.expr1.accept(this);
+        Type e2Type = e.expr2.accept(this);
 
-        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType)
+        if (e1Type instanceof ArrayType || e1Type instanceof VoidType || e1Type instanceof BooleanType)
         {
-            String msg = "Add expression left operand cannot have type " + expr1Type + ".";
+            String msg = "Add expression left operand cannot have type " + e1Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType)
+        else if (e2Type instanceof ArrayType || e2Type instanceof VoidType || e2Type instanceof BooleanType)
         {
-            String msg = "Add expression right operand cannot have type " + expr2Type + ".";
+            String msg = "Add expression right operand cannot have type " + e2Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        // Bonus: allow (float) + (int) and vice versa
+        else if ((e1Type instanceof IntegerType && e2Type instanceof FloatType)
+                || (e1Type instanceof FloatType && e2Type instanceof IntegerType))
+        {
+            return new FloatType();
+        }
+        // Bonus: allow (char) + (string) and vice versa
+        else if ((e1Type instanceof CharType && e2Type instanceof StringType)
+                || (e1Type instanceof StringType && e2Type instanceof CharType))
+        {
+            return new StringType();
+        }
+        else if (!e1Type.getClass().equals(e2Type.getClass()))
         {
             String msg = "Add expression operands must have matching types. Found (" 
-                + expr1Type + ") and (" + expr2Type + ").";
+                + e1Type + ") and (" + e2Type + ").";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        return expr1Type;
+        return e1Type;
     }
     public Type visit (SubtractExpression e) throws SemanticException
     {
-        Type expr1Type = e.expr1.accept(this);
-        Type expr2Type = e.expr2.accept(this);
+        Type e1Type = e.expr1.accept(this);
+        Type e2Type = e.expr2.accept(this);
 
-        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType)
+        if (e1Type instanceof ArrayType || e1Type instanceof VoidType || e1Type instanceof BooleanType || e1Type instanceof StringType)
         {
-            String msg = "Subtract expression left operand cannot have type " + expr1Type + ".";
+            String msg = "Subtract expression left operand cannot have type " + e1Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType || expr2Type instanceof StringType)
+        else if (e2Type instanceof ArrayType || e2Type instanceof VoidType || e2Type instanceof BooleanType || e2Type instanceof StringType)
         {
-            String msg = "Subtract expression right operand cannot have type " + expr2Type + ".";
+            String msg = "Subtract expression right operand cannot have type " + e2Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        // Bonus: allow (float) - (int) and vice versa
+        else if ((e1Type instanceof IntegerType && e2Type instanceof FloatType)
+                || (e1Type instanceof FloatType && e2Type instanceof IntegerType))
+        {
+            return new FloatType();
+        }
+        else if (!e1Type.getClass().equals(e2Type.getClass()))
         {
             String msg = "Subtract expression operands must have matching types. Found (" 
-                + expr1Type + ") and (" + expr2Type + ").";
+                + e1Type + ") and (" + e2Type + ").";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
 
-        return expr1Type;
+        return e1Type;
     }
     public Type visit (MultExpression e) throws SemanticException
     {
-        Type expr1Type = e.expr1.accept(this);
-        Type expr2Type = e.expr2.accept(this);
+        Type e1Type = e.expr1.accept(this);
+        Type e2Type = e.expr2.accept(this);
 
-        if (expr1Type instanceof ArrayType || expr1Type instanceof VoidType || expr1Type instanceof BooleanType || expr1Type instanceof StringType || expr1Type instanceof CharType)
+        // Bonus: allow (char) * (int) and vice versa
+        if ((e1Type instanceof CharType && e2Type instanceof IntegerType)
+                || (e1Type instanceof IntegerType && e2Type instanceof CharType))
         {
-            String msg = "Multiply expression left operand cannot have type " + expr1Type + ".";
+            return new StringType();
+        }
+        // Bonus: allow (string) * (int) and vice versa
+        else if ((e1Type instanceof StringType && e2Type instanceof IntegerType)
+                || (e1Type instanceof IntegerType && e2Type instanceof StringType))
+        {
+            return new StringType();
+        }
+        else if (e1Type instanceof ArrayType || e1Type instanceof VoidType || e1Type instanceof BooleanType || e1Type instanceof StringType || e1Type instanceof CharType)
+        {
+            String msg = "Multiply expression left operand cannot have type " + e1Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (expr2Type instanceof ArrayType || expr2Type instanceof VoidType || expr2Type instanceof BooleanType || expr2Type instanceof StringType || expr2Type instanceof CharType)
+        else if (e2Type instanceof ArrayType || e2Type instanceof VoidType || e2Type instanceof BooleanType || e2Type instanceof StringType || e2Type instanceof CharType)
         {
-            String msg = "Multiply expression right operand cannot have type " + expr2Type + ".";
+            String msg = "Multiply expression right operand cannot have type " + e2Type + ".";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
-        else if (!expr1Type.getClass().equals(expr2Type.getClass()))
+        // Bonus: allow (float) * (int) and vice versa
+        else if ((e1Type instanceof IntegerType && e2Type instanceof FloatType)
+                || (e1Type instanceof FloatType && e2Type instanceof IntegerType))
+        {
+            return new FloatType();
+        }
+        else if (!e1Type.getClass().equals(e2Type.getClass()))
         {
             String msg = "Multiply expression operands must have matching types. Found (" 
-                + expr1Type + ") and (" + expr2Type + ").";
+                + e1Type + ") and (" + e2Type + ").";
             throw new SemanticException(msg, e.getLine(), e.getOffset());
         }
 
-        return expr1Type;
+        return e1Type;
     }
     public Type visit (ParenExpression e) throws SemanticException
     {

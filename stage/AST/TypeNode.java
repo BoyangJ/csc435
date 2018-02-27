@@ -6,18 +6,17 @@ import Semantic.*;
 public class TypeNode extends ASTNode
 {
     public Type type;
-    // public IntegerLiteral index;
 
     public TypeNode (Type t)
     {
         type = t;
     }
 
-    public TypeNode (ArrayType t, Type arrayType, IntegerLiteral i, int l, int o)
+    public TypeNode (Type t, IntegerLiteral i, int l, int o)
     {
-        type = t;
-        t.type = arrayType;
-        t.size = i.value;
+        type = new ArrayType(t, i.value);
+        type.type = t;
+        type.size = i.value;
 
         line = l;
         offset = o;

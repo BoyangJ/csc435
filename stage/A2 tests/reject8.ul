@@ -1,0 +1,11 @@
+void main () 
+{
+
+}
+
+int foo ()
+{
+    return 6;
+    print "asd";
+
+}

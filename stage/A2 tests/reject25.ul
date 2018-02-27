@@ -1,0 +1,6 @@
+void main () 
+{
+    foo(9, 10);
+}
+
+int foo(int a, float b) { }

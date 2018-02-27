@@ -1,4 +1,4 @@
-// $ANTLR 3.0.1 ulNoActions.g 2018-02-25 12:49:04
+// $ANTLR 3.0.1 ulNoActions.g 2018-02-27 14:19:10
 
   import AST.*;
   import Types.*;
@@ -565,7 +565,7 @@ public class ulNoActionsParser extends Parser {
                     if (failed) return tn;
                     match(input,30,FOLLOW_30_in_compoundType292); if (failed) return tn;
                     if ( backtracking==0 ) {
-                       tn = new TypeNode(new ArrayType(), t.type, i, t.line, t.offset); 
+                       tn = new TypeNode(t.type, i, t.line, t.offset); 
                     }
 
                     }

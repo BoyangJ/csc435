@@ -1,0 +1,7 @@
+void main () 
+{
+    int[10] a;
+    int[2] b;
+
+    a == b;
+}

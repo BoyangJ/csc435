@@ -1,0 +1,12 @@
+void main () 
+{
+    int[10] a;
+    float[10] b;
+    char[10] c;
+    string[10] d;
+
+    c[3] == b[0];
+    b[3] = b[4] + b[0];
+    c[3] = c[4] + c[0];
+    d[3] = d[4] + d[0];
+}

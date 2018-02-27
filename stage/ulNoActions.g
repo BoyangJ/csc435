@@ -76,7 +76,7 @@ varDecl returns [VariableDeclaration vd]:
 
 compoundType returns [TypeNode tn]: 
   t=type { tn = t; }
-  | t=type '[' i=intLiteral ']' { tn = new TypeNode(new ArrayType(), t.type, i, t.line, t.offset); }
+  | t=type '[' i=intLiteral ']' { tn = new TypeNode(t.type, i, t.line, t.offset); }
   ;
 
 identifier returns [Identifier i]: 

@@ -1,0 +1,125 @@
+int[10] function100 ( void[99] param1 , int a, int b, int c)
+{
+    int abc;
+    float name;
+    char C;
+    string ______;
+    boolean _;
+
+    int[0] aaa;
+    float[10000] xd;
+    char[400] name2;
+    string[4] ALL_CAPS;
+    boolean[1] _1;
+
+    // this comment does not match anything
+}
+
+void new () 
+{
+    int[10] a;
+    float[10] b;
+    char[10] c;
+    string[10] d;
+
+    a[3] = a[4] + a[0];
+    b[3] = b[4] + b[0];
+    c[3] = c[4] + c[0];
+    d[3] = d[4] + d[0];
+}
+
+float arr (int a, float b, char c)
+{
+	return 4.3;
+}
+
+float __statement_and_expression_tests__( ) 
+//comment lol
+{
+    // match "Expr ;"
+    boolean condition;
+    boolean condition2;
+    boolean condition3;
+    boolean _while_condition;
+    int num;
+    ;;;;;;;; ;; ; ;   ;;;;
+
+    // testing operators
+    5 * 'r' ;
+    232 + 34.11 ;
+    3 - 10.0;
+    ( arr(2, 2.0, 's') ) < 4 ;
+    3.11 == arr(2, 2.0, 'g') ;
+    true == 0.0 < 9.3 * 6 - 2 + 33.1 ;
+    ('l' * 5) == "lllll";
+
+    // nested if statements
+    if (condition)
+    {
+        if (condition2) 
+        {
+            if (condition3)
+            {
+                while (_while_condition)
+                {
+                    num = 1;
+                }
+            }
+        }
+    }
+
+}
+
+char more_keyword_statements ( boolean[10] _111 )
+{
+    string identifier;
+
+    // while statement, print, println, and return
+    while ( ( ( ( ( false ) ) ) ) )
+    {
+        return 's'; 
+
+        print ( 21 );
+        print (identifier);
+        println(9.5 + 5.3 < 9) ;
+    }
+
+}
+
+string[40] no_params ( ) 
+{
+    // strings
+    "this is a test fksladjf sadfljksad fdsjkf jfkas fkuasfk sa";
+    "";
+    " ";
+    "ALL CAPITALS";
+
+    // floats
+    1000000000000000000.000000000000000000;
+    0.2;
+    00004234.5630000;
+
+    // integers
+    238437483;
+    00000;
+    1;
+
+    // characters
+    '2';
+    '-';
+    '_';
+    ' ';
+
+    true;
+    false;
+}
+
+void main ()
+{
+}
+
+boolean[0] nothing ( ) 
+{
+
+}
+
