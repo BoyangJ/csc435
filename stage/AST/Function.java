@@ -1,6 +1,7 @@
 package AST;
 
 import Semantic.*;
+import IR.*;
 
 public class Function extends ASTNode
 {
@@ -19,6 +20,11 @@ public class Function extends ASTNode
     }
 
     public void accept (TypeVisitor v) throws SemanticException
+    {
+        v.visit(this);
+    }
+
+    public void accept (TempVisitor v)
     {
         v.visit(this);
     }

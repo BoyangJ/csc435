@@ -2,6 +2,7 @@ package AST;
 
 import Types.*;
 import Semantic.*;
+import IR.*;
 
 public class FormalParameter extends ASTNode
 {
@@ -22,5 +23,10 @@ public class FormalParameter extends ASTNode
     public Type accept (TypeVisitor v) throws SemanticException
     {
         return v.visit(this);
+    }
+
+    public void accept (TempVisitor v)
+    {
+        v.visit(this);
     }
 }

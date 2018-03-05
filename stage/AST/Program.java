@@ -1,6 +1,7 @@
 package AST;
 
 import Semantic.*;
+import IR.*;
 import java.util.Vector;
 
 public class Program extends ASTNode
@@ -37,4 +38,8 @@ public class Program extends ASTNode
         v.visit(this);
     }
 
+    public void accept (TempVisitor v)
+    {
+        v.visit(this);
+    }
 }

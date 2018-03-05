@@ -2,6 +2,7 @@ package AST;
 
 import Types.*;
 import Semantic.*;
+import IR.*;
 
 public class EqualityExpression extends Expression
 {
@@ -20,6 +21,11 @@ public class EqualityExpression extends Expression
     }
 
     public Type accept (TypeVisitor v) throws SemanticException
+    {
+        return v.visit(this);
+    }
+
+    public Temp accept (TempVisitor v)
     {
         return v.visit(this);
     }

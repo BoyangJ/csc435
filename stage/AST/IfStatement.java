@@ -2,6 +2,7 @@ package AST;
 
 import Types.*;
 import Semantic.*;
+import IR.*;
 
 public class IfStatement extends Statement
 {
@@ -28,6 +29,11 @@ public class IfStatement extends Statement
     }
 
     public Type accept (TypeVisitor v) throws SemanticException
+    {
+        return v.visit(this);
+    }
+
+    public Temp accept (TempVisitor v)
     {
         return v.visit(this);
     }
