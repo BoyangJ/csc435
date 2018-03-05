@@ -1,0 +1,7 @@
+# ignore .class files
+*.class
+*/*.class
+
+# ignore submitted tar.gz files
+*.tar.gz
+
