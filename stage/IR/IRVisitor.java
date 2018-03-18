@@ -169,8 +169,53 @@ public class IRVisitor implements TempVisitor
 
         return null;
     }
-    public Temp visit (PrintStatement e){return null;}
-    public Temp visit (PrintlnStatement e){return null;}
+
+    public Temp visit (PrintStatement ps)
+    {
+        IRInstruction in;
+        Temp t;
+
+        if (isLiteral(ps.expr))
+        {
+            t = currentFunction.temps.getTemp(tempType);
+            ps.expr.accept(this);
+            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            t = ps.expr.accept(this);
+        }
+
+        in = new IRPrint(t);
+        currentFunction.addIRInstruction(in);
+
+        return null;
+    }
+
+    public Temp visit (PrintlnStatement pls)
+    {
+        IRInstruction in;
+        Temp t;
+
+        if (isLiteral(pls.expr))
+        {
+            t = currentFunction.temps.getTemp(tempType);
+            pls.expr.accept(this);
+            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            t = pls.expr.accept(this);
+        }
+
+        in = new IRPrintln(t);
+        currentFunction.addIRInstruction(in);
+
+        return null;
+    }
+    
     public Temp visit (ReturnStatement e){return null;}
     public Temp visit (AssignmentStatement as)
     {
