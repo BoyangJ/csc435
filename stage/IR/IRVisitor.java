@@ -126,7 +126,49 @@ public class IRVisitor implements TempVisitor
 
         return null;
     }
-    public Temp visit (WhileStatement e){return null;}
+    public Temp visit (WhileStatement ws)
+    {
+        IRInstruction in;
+        IRLabel l1 = new IRLabel();
+        IRLabel l2 = new IRLabel();
+
+        Temp t;
+
+        currentFunction.addIRInstruction(l1);
+
+        if (isLiteral(ws.expr))
+        {
+            t = currentFunction.temps.getTemp(new BooleanType());
+            ws.expr.accept(this);
+            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            t = ws.expr.accept(this);
+        }
+
+        // make new Temp to prevent overwriting a parameter or local
+        Temp t2 = currentFunction.temps.getTemp(new BooleanType());
+        in = new IRVarAssign(t2, t, AssignmentType.TWO_OPERANDS);
+        currentFunction.addIRInstruction(in);
+        t = t2;
+
+        in = new IRUnaryOP(t, t, UnaryOPType.IRInvertBool);
+        currentFunction.addIRInstruction(in);
+
+        in = new IRIfStatement(t, l2);
+        currentFunction.addIRInstruction(in);
+
+        ws.block.accept(this);
+
+        in = new IRGoto(l1);
+        currentFunction.addIRInstruction(in);
+
+        currentFunction.addIRInstruction(l2);
+
+        return null;
+    }
     public Temp visit (PrintStatement e){return null;}
     public Temp visit (PrintlnStatement e){return null;}
     public Temp visit (ReturnStatement e){return null;}
