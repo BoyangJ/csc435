@@ -21,6 +21,7 @@ public class IRLabel extends IRInstruction
     public String toString()
     {
         // TODO: print L#:;
-        return "";
+        String label = String.format("L%d:;", number);
+        return label;
     }
 }

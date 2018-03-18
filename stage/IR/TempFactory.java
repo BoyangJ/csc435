@@ -16,7 +16,10 @@ public class TempFactory
 
     public Temp getTemp(Type t)
     {
-        Temp newTemp = new Temp(t);
+        // debug
+        System.out.println("handing out temp " + next);
+
+        Temp newTemp = new Temp(t, next);
         TempsList[next] = newTemp;
         next++;
 
@@ -25,16 +28,45 @@ public class TempFactory
 
     public Temp getTemp(Type t, TempClass tc, String n)
     {
-        Temp newTemp = new Temp(t, tc, n);
+        Temp newTemp = new Temp(t, next, tc, n);
         TempsList[next] = newTemp;
         next++;
 
         return newTemp;
     }
+
+    public Temp lookup(String n) 
+    {
+        for (int i = 0; i < next; i++)
+        {
+            if (TempsList[i].name.equals(n))
+            {
+                // debug
+                System.out.println("found in list of temps");
+
+                return TempsList[i];
+            }
+        }
+        return null;
+    }
     
     public String toString() 
     {
         // TODO: print declarations of all temps in a row
+        String typeSpecifier;
+        for (int i = 0; i < next; i++)
+        {
+            if (TempsList[i].type instanceof BooleanType) { typeSpecifier = "Z"; }
+            else if (TempsList[i].type instanceof CharType) { typeSpecifier = "C"; }
+            else if (TempsList[i].type instanceof IntegerType) { typeSpecifier = "I"; }
+            else if (TempsList[i].type instanceof FloatType) { typeSpecifier = "F"; }
+            else if (TempsList[i].type instanceof StringType) { typeSpecifier = "U"; }
+
+            else { typeSpecifier = "?"; }
+            // TODO: add array type
+
+            System.out.println(String.format("\tTEMP %d:%s;", i, typeSpecifier));
+        }
         return "";
     }
 }

@@ -16,6 +16,8 @@ public class IRFunction
     public IRFunction(FunctionDeclaration fd) 
     {
         name = fd.name.name;
+        instr = new Vector<IRInstruction>();
+        temps = new TempFactory();
 
         // for every parameter in fd, create new temp with temps
         Iterator<FormalParameter> itr = fd.params.fpList.iterator();
@@ -30,7 +32,7 @@ public class IRFunction
         
     }
     
-    public void add (IRInstruction i)
+    public void addIRInstruction (IRInstruction i)
     {
         instr.addElement(i);
     }
@@ -38,8 +40,20 @@ public class IRFunction
     public String toString() 
     {
         // TODO: print "FUNC", then name, signature
+        System.out.println(String.format("FUNC %s %s", name, signature));
+        System.out.println("{");
 
         // TODO: then print tempFactory, then print list of instructions
+        System.out.println(temps);
+
+        Iterator<IRInstruction> itr = instr.iterator();
+        while(itr.hasNext())
+        {
+            System.out.println(itr.next());
+        }
+
+        System.out.println("}");
+
         return "";
     }
 }

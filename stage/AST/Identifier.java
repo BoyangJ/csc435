@@ -33,4 +33,9 @@ public class Identifier extends ASTNode
     {
         v.visit(this);
     }
+
+    public String toString()
+    {
+        return name;
+    }
 }

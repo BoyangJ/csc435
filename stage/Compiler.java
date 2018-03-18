@@ -8,6 +8,7 @@
 import org.antlr.runtime.*;
 import java.io.*;
 import AST.*;
+import IR.*;
 import Environment.*;
 import Semantic.*;
 
@@ -34,6 +35,9 @@ public class Compiler {
 			Program p = parser.program();
 			TypeVisitor v = new TypeCheckVisitor();
 			p.accept(v);
+
+			IRVisitor IRv = new IRVisitor(args[0]);
+			p.accept(IRv);
 		}
 		catch (RecognitionException e )	{
 			// A lexical or parsing error occured.

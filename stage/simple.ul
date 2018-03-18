@@ -1,0 +1,31 @@
+void main() { } 
+
+void foo(boolean a) { }
+
+void fiveparams(int i, float f, string s, char c, boolean b) 
+{
+	int g;
+	string asd;
+
+	g = i;
+	g = 10;
+	b = true;
+	asd = "hello";
+
+	if (10 == 10) 
+	{
+		b = false; 
+		(10 + 10);
+	}
+	else 
+	{
+		g = 123123;
+	}
+
+	g = 123;
+
+
+//	if (b) { } 
+//	else { } 
+
+} 

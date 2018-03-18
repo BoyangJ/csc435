@@ -1,5 +1,6 @@
 package IR;
 
+import java.util.Iterator;
 import java.util.Vector;
 import Types.*;
 
@@ -14,7 +15,7 @@ public class IRProgram
         functions = new Vector<IRFunction>();
     }
     
-    public void addElement (IRFunction f)
+    public void addIRFunction (IRFunction f)
     {
         functions.addElement(f);
     }
@@ -22,6 +23,12 @@ public class IRProgram
     public String toString() 
     {
         // TODO: for every function in functions, print function
+        Iterator<IRFunction> itr = functions.iterator();
+        while(itr.hasNext())
+        {
+            System.out.println(itr.next());
+        }
+
         return "";
     }
 }

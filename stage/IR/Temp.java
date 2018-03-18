@@ -19,14 +19,16 @@ public class Temp
     boolean inUse;
     TempClass tempClass;
 
-    public Temp(Type t) 
+    public Temp(Type t, int num) 
     {
         type = t;
+        number = num;
     }
 
-    public Temp(Type t, TempClass tc, String n) 
+    public Temp(Type t, int num, TempClass tc, String n) 
     {
         type = t;
+        number = num;
         tempClass = tc;
         name = n;
     }
@@ -34,6 +36,6 @@ public class Temp
     public String toString() 
     {
         // TODO: print format for temp
-        return "";
+        return String.format("T%d", number);
     }
 }
