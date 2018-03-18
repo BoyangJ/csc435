@@ -36,22 +36,31 @@ public class IRBinaryOP extends IRInstruction
         operand2 = o2;
         type = t;
 
+        String typeSpecifier;
+        if (operand1.type instanceof BooleanType) { typeSpecifier = "Z"; }
+        else if (operand1.type instanceof CharType) { typeSpecifier = "C"; }
+        else if (operand1.type instanceof IntegerType) { typeSpecifier = "I"; }
+        else if (operand1.type instanceof FloatType) { typeSpecifier = "F"; }
+        else if (operand1.type instanceof StringType) { typeSpecifier = "U"; }
+
+        else { typeSpecifier = "?"; }
+
         switch (t)
         {
             case IRBinaryAdd:
-                operator = "+";
+                operator = typeSpecifier + "+";
                 break;
             case IRBinarySubtract:
-                operator = "-";
+                operator = typeSpecifier + "-";
                 break;
             case IRBinaryMult:
-                operator = "*";
+                operator = typeSpecifier + "*";
                 break;
             case IRBinaryEquality:
-                operator = "==";
+                operator = typeSpecifier + "==";
                 break;
             case IRBinaryLessThan:
-                operator = "<";
+                operator = typeSpecifier + "<";
                 break;
             
         }

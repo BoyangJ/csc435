@@ -84,7 +84,20 @@ public class IRVisitor implements TempVisitor
         IRLabel l1 = new IRLabel();
         IRLabel l2 = new IRLabel();
 
-        Temp t = is.expr.accept(this);
+        Temp t;
+
+        if (isLiteral(is.expr))
+        {
+            t = currentFunction.temps.getTemp(new BooleanType());
+            is.expr.accept(this);
+            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            t = is.expr.accept(this);
+        }
+
         // make new Temp to prevent overwriting a parameter or local
         Temp t2 = currentFunction.temps.getTemp(new BooleanType());
         in = new IRVarAssign(t2, t, AssignmentType.TWO_OPERANDS);
@@ -110,9 +123,6 @@ public class IRVisitor implements TempVisitor
         }
 
         currentFunction.addIRInstruction(l2);
-
-        //debug
-        //System.out.println("factory output for " + currentFunction.name + ": \n" + currentFunction.temps);
 
         return null;
     }
@@ -186,14 +196,177 @@ public class IRVisitor implements TempVisitor
 
         in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryEquality), AssignmentType.BINARY_OP);
         currentFunction.addIRInstruction(in);
-        
+
         return dest;
     }
-    public Temp visit (LessThanExpression e){return null;}
-    public Temp visit (AddExpression e){return null;}
-    public Temp visit (SubtractExpression e){return null;}
-    public Temp visit (MultExpression e){return null;}
-    public Temp visit (ParenExpression e){return null;}
+    public Temp visit (LessThanExpression e)
+    {
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new BooleanType());
+        Temp e1Temp;
+        Temp e2Temp;
+
+        if (isLiteral(e.expr1))
+        {
+            e1Temp = currentFunction.temps.getTemp(tempType);
+            e.expr1.accept(this);
+            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e1Temp = e.expr1.accept(this);
+        }
+
+        if (isLiteral(e.expr2))
+        {
+            e2Temp = currentFunction.temps.getTemp(tempType);
+            e.expr2.accept(this);
+            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e2Temp = e.expr2.accept(this);
+        }
+
+        in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryLessThan), AssignmentType.BINARY_OP);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
+    }
+    public Temp visit (AddExpression e)
+    {
+        IRInstruction in;
+        Temp e1Temp;
+        Temp e2Temp;
+
+        if (isLiteral(e.expr1))
+        {
+            e1Temp = currentFunction.temps.getTemp(tempType);
+            e.expr1.accept(this);
+            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e1Temp = e.expr1.accept(this);
+        }
+
+        if (isLiteral(e.expr2))
+        {
+            e2Temp = currentFunction.temps.getTemp(tempType);
+            e.expr2.accept(this);
+            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e2Temp = e.expr2.accept(this);
+        }
+
+        Temp dest = currentFunction.temps.getTemp(e1Temp.type);
+
+        in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryAdd), AssignmentType.BINARY_OP);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
+    }
+    public Temp visit (SubtractExpression e)
+    {
+        IRInstruction in;
+        Temp e1Temp;
+        Temp e2Temp;
+
+        if (isLiteral(e.expr1))
+        {
+            e1Temp = currentFunction.temps.getTemp(tempType);
+            e.expr1.accept(this);
+            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e1Temp = e.expr1.accept(this);
+        }
+
+        if (isLiteral(e.expr2))
+        {
+            e2Temp = currentFunction.temps.getTemp(tempType);
+            e.expr2.accept(this);
+            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e2Temp = e.expr2.accept(this);
+        }
+
+        Temp dest = currentFunction.temps.getTemp(e1Temp.type);
+
+        in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinarySubtract), AssignmentType.BINARY_OP);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
+    }
+    public Temp visit (MultExpression e)
+    {
+        IRInstruction in;
+        Temp e1Temp;
+        Temp e2Temp;
+
+        if (isLiteral(e.expr1))
+        {
+            e1Temp = currentFunction.temps.getTemp(tempType);
+            e.expr1.accept(this);
+            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e1Temp = e.expr1.accept(this);
+        }
+
+        if (isLiteral(e.expr2))
+        {
+            e2Temp = currentFunction.temps.getTemp(tempType);
+            e.expr2.accept(this);
+            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            e2Temp = e.expr2.accept(this);
+        }
+
+        Temp dest = currentFunction.temps.getTemp(e1Temp.type);
+
+        in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryMult), AssignmentType.BINARY_OP);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
+    }
+
+    public Temp visit (ParenExpression e)
+    {
+        IRInstruction in;
+        Temp eTemp;
+
+        if (isLiteral(e.expr))
+        {
+            eTemp = currentFunction.temps.getTemp(tempType);
+            e.expr.accept(this);
+            in = new IRVarAssign(eTemp, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            eTemp = e.expr.accept(this);
+        }
+
+        return eTemp;
+    }
+
     public Temp visit (IdentifierExpression e)
     {
         return currentFunction.temps.lookup(e.id.name);

@@ -8,11 +8,18 @@ void fiveparams(int i, float f, string s, char c, boolean b)
 	string asd;
 
 	g = i;
-	g = 10;
+	b = b == b;
+	b = f < f;
+	s = s + s;
+	c = c - c;
+	i = i * i;
+	i = (i * i);
+	i = (g);
+
 	b = true;
 	asd = "hello";
 
-	if (10 == 10) 
+	if (10 < 10) 
 	{
 		b = false; 
 		(10 + 10);
