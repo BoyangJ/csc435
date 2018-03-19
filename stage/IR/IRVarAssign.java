@@ -8,7 +8,8 @@ enum AssignmentType
     NEW_ARRAY,
     TWO_OPERANDS,
     UNARY_OP,
-    BINARY_OP;
+    BINARY_OP,
+    FUNCTION_CALL;
 
     // TODO: bunch more
 }
@@ -23,6 +24,7 @@ public class IRVarAssign extends IRInstruction
 
     IRUnaryOP unaryOP;
     IRBinaryOP binaryOP;
+    IRCall call;
 
     AssignmentType type;
 
@@ -47,6 +49,13 @@ public class IRVarAssign extends IRInstruction
         type = t;
     }
 
+    public IRVarAssign(Temp d, IRCall c, AssignmentType t)
+    {
+        dest = d;
+        call = c;
+        type = t;
+    }
+
     public String toString()
     {
         String ir = "";
@@ -63,6 +72,10 @@ public class IRVarAssign extends IRInstruction
 
             case BINARY_OP:
                 ir = String.format("\t%s := %s %s %s", dest, binaryOP.operand1, binaryOP.operator, binaryOP.operand2);
+                break;
+
+            case FUNCTION_CALL:
+                ir = String.format("\t%s := %s;", dest, call.toString().substring(1, call.toString().length()));
                 break;
         }
         // TODO: print (dest) := (operand1) (operand type)(binary op) (operand2)

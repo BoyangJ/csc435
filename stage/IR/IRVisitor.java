@@ -1,6 +1,7 @@
 package IR;
 
 import java.util.Iterator;
+import java.util.Vector;
 import AST.*;
 import Types.*;
 import Environment.*;
@@ -73,13 +74,20 @@ public class IRVisitor implements TempVisitor
     // are these 4 necessary???
     public Temp visit (FormalParameter fp){return null;}
     public Temp visit (VariableDeclaration vd){return null;}
-    public Temp visit (Identifier i){return null;}
+    public Temp visit (Identifier i){ System.out.println("found here lol"); return null;}
     public Temp visit (TypeNode t){return null;}
     // these 4
 
     // this one for function calls
     // if an ID is not found in temp factory, must be function name
-    public Temp visit (ExpressionStatement es){return null;}
+    public Temp visit (ExpressionStatement es)
+    {
+        if (es.expr != null)
+        {
+            return es.expr.accept(this);
+        }
+        return null;
+    }
 
     public Temp visit (IfStatement is)
     {
@@ -260,6 +268,38 @@ public class IRVisitor implements TempVisitor
             as.expr.accept(this);
             in = new IRVarAssign(dest, assignmentVar, AssignmentType.CONSTANT);
         }
+
+        // else if as.expr instanceof functionexpression
+        else if (as.expr instanceof FunctionExpression)
+        {
+            FunctionExpression e = (FunctionExpression)as.expr;
+            Iterator<Expression> itr = e.eList.eList.iterator();
+            Vector<Temp> argumentsList = new Vector<Temp>();
+
+            while(itr.hasNext())
+            {
+                Temp argTemp;
+                Expression argument = itr.next();
+                 
+                if (isLiteral(argument))
+                {
+                    argTemp = currentFunction.temps.getTemp(tempType);
+                    argument.accept(this);
+                    in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
+                    currentFunction.addIRInstruction(in);
+                }
+                else
+                {
+                    argTemp = argument.accept(this);
+                }
+
+                argumentsList.add(argTemp);
+            }
+
+            IRCall call = new IRCall(e.id.name, argumentsList);
+            in = new IRVarAssign(dest, call, AssignmentType.FUNCTION_CALL);
+        }
+
         else
         {
             Temp expr = as.expr.accept(this);
@@ -491,7 +531,40 @@ public class IRVisitor implements TempVisitor
         return currentFunction.temps.lookup(e.id.name);
     }
     public Temp visit (ArrayExpression e){return null;}
-    public Temp visit (FunctionExpression e){return null;}
+
+    public Temp visit (FunctionExpression e)
+    {
+        System.out.println("function call found");
+        IRInstruction in;
+
+        Iterator<Expression> itr = e.eList.eList.iterator();
+        Vector<Temp> argumentsList = new Vector<Temp>();
+
+        while(itr.hasNext())
+        {
+            Temp argTemp;
+            Expression argument = itr.next();
+             
+            if (isLiteral(argument))
+            {
+                argTemp = currentFunction.temps.getTemp(tempType);
+                argument.accept(this);
+                in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
+                currentFunction.addIRInstruction(in);
+            }
+            else
+            {
+                argTemp = argument.accept(this);
+            }
+
+            argumentsList.add(argTemp);
+        }
+
+        in = new IRCall(e.id.name, argumentsList);
+        currentFunction.addIRInstruction(in);
+
+        return null;
+    }
 
     public Temp visit (IntegerLiteral i)
     {

@@ -1,6 +1,4 @@
-void main() { return; }
-
-int foo() 
+int foo(int a) 
 {
 	int i;
 	string s;
@@ -8,7 +6,7 @@ int foo()
 
 	while (i < 5)
 	{
-		print i;
+		println i;
 		i = i + 1;
 	}
 
@@ -16,3 +14,10 @@ int foo()
 	return 10;
 } 
 
+void main() 
+{
+	int i;
+
+	i = foo(0);
+	return;
+}
