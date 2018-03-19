@@ -13,14 +13,10 @@ public class IRVisitor implements TempVisitor
     IRProgram prog;
     IRFunction currentFunction;
 
-    boolean singleFuncCall;
-
     public IRVisitor(String n)
     {
         prog = new IRProgram(n);
         fEnv = new ListEnvironment<String,Type>();
-
-        singleFuncCall = false;
     }
 
     public Temp visit (Program p)
@@ -104,10 +100,6 @@ public class IRVisitor implements TempVisitor
     {
         if (es.expr != null)
         {
-            if (es.expr instanceof FunctionExpression)
-            {
-                singleFuncCall = true;
-            }
             return es.expr.accept(this);
         }
         return null;
@@ -373,11 +365,10 @@ public class IRVisitor implements TempVisitor
             argumentsList.add(argTemp);
         }
         
-        if (singleFuncCall)
+        if (fEnv.lookup(e.id.name) instanceof VoidType)
         {
             in = new IRCall(e.id.name, argumentsList);
             currentFunction.addIRInstruction(in);
-            singleFuncCall = false;
         }
         else
         {
