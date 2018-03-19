@@ -1,4 +1,4 @@
-int foo(int a) 
+int foo(int a, int b, int c) 
 {
 	int i;
 	string s;
@@ -18,6 +18,7 @@ void main()
 {
 	int i;
 
-	i = foo(0);
+	i = foo(0, 2, i);
+	foo(i, i, i);
 	return;
 }

@@ -53,7 +53,7 @@ public class TempFactory
     public String toString() 
     {
         // TODO: print declarations of all temps in a row
-        String typeSpecifier;
+        String typeSpecifier = "";
         for (int i = 0; i < next; i++)
         {
             if (TempsList[i].type instanceof BooleanType) { typeSpecifier = "Z"; }
@@ -62,8 +62,16 @@ public class TempFactory
             else if (TempsList[i].type instanceof FloatType) { typeSpecifier = "F"; }
             else if (TempsList[i].type instanceof StringType) { typeSpecifier = "U"; }
 
-            else { typeSpecifier = "?"; }
-            // TODO: add array type
+            else if (TempsList[i].type instanceof ArrayType)
+            {
+                ArrayType varArrayType = (ArrayType)TempsList[i].type;
+
+                if (varArrayType.type instanceof BooleanType) { typeSpecifier = "AZ"; }
+                else if (varArrayType.type instanceof CharType) { typeSpecifier = "AC"; }
+                else if (varArrayType.type instanceof IntegerType) { typeSpecifier = "AI"; }
+                else if (varArrayType.type instanceof FloatType) { typeSpecifier = "AF"; }
+                else if (varArrayType.type instanceof StringType) { typeSpecifier = "AU"; }
+            }
 
             System.out.println(String.format("\tTEMP %d:%s;", i, typeSpecifier));
         }

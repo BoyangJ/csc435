@@ -14,6 +14,8 @@ public class IRVisitor implements TempVisitor
     String assignmentVar;
     Type tempType;
 
+    Temp arrayIndexTemp;
+
     public IRVisitor(String n)
     {
         prog = new IRProgram(n);
@@ -60,7 +62,14 @@ public class IRVisitor implements TempVisitor
             Type varType = var.type.type;
             String varName = var.name.name;
 
-            currentFunction.temps.getTemp(varType, TempClass.LOCALS, varName);
+            Temp newTemp = currentFunction.temps.getTemp(varType, TempClass.LOCALS, varName);
+
+            if (varType instanceof ArrayType)
+            {
+                ArrayType varArrayType = (ArrayType)varType;
+                IRInstruction in = new IRVarAssign(newTemp, varArrayType.type, varArrayType.size, AssignmentType.NEW_ARRAY);
+                currentFunction.addIRInstruction(in);
+            }
         }
 
         Iterator<Statement> itr2 = fb.sList.sList.iterator();
@@ -300,6 +309,12 @@ public class IRVisitor implements TempVisitor
             in = new IRVarAssign(dest, call, AssignmentType.FUNCTION_CALL);
         }
 
+        else if (as.expr instanceof ArrayExpression)
+        {
+            Temp expr = as.expr.accept(this);
+            in = new IRVarAssign(dest, expr, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+        }
+
         else
         {
             Temp expr = as.expr.accept(this);
@@ -309,7 +324,44 @@ public class IRVisitor implements TempVisitor
 
         return null;
     }
-    public Temp visit (ArrayAssignmentStatement e){return null;}
+    public Temp visit (ArrayAssignmentStatement aas)
+    {
+        IRInstruction in;
+
+        Temp dest = aas.arrayExpr.accept(this); 
+        Temp destIndex = arrayIndexTemp;
+
+        Temp expr;
+
+        if (isLiteral(aas.expr))
+        {
+            expr = currentFunction.temps.getTemp(tempType);
+            aas.expr.accept(this);
+            in = new IRVarAssign(expr, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+
+        else if (aas.expr instanceof ArrayExpression)
+        {
+            Temp yolo = currentFunction.temps.getTemp(dest.type.type);
+
+            expr = aas.expr.accept(this);
+            in = new IRVarAssign(yolo, expr, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+            currentFunction.addIRInstruction(in);
+
+            expr = yolo;
+        }
+        
+        else
+        {
+            expr = aas.expr.accept(this);
+        }
+
+        in = new IRVarAssign(dest, destIndex, expr, AssignmentType.ARRAY_LEFT);
+        currentFunction.addIRInstruction(in);
+
+        return null;
+    }
 
     public Temp visit (Block b)
     {
@@ -530,7 +582,27 @@ public class IRVisitor implements TempVisitor
     {
         return currentFunction.temps.lookup(e.id.name);
     }
-    public Temp visit (ArrayExpression e){return null;}
+
+    public Temp visit (ArrayExpression e)
+    {
+        IRInstruction in;
+        Temp t;
+
+        if (isLiteral(e.expr))
+        {
+            t = currentFunction.temps.getTemp(tempType);
+            e.expr.accept(this);
+            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else
+        {
+            t = e.expr.accept(this);
+        }
+
+        arrayIndexTemp = t;
+        return currentFunction.temps.lookup(e.id.name);
+    }
 
     public Temp visit (FunctionExpression e)
     {
