@@ -1,0 +1,13 @@
+void main () {
+	foo(true);
+	foo(false);
+}
+
+void foo (boolean b) {
+	int x;
+	
+	if (b) {
+		x = 9;
+	}
+	println x;
+}

@@ -13,8 +13,4 @@ AST, Environment, Semantic, IR, and Types packages
 
 
 THINGS I KNOW DON'T WORK:
-array variables as if statement condition
-array variables as while statement condition
-array variables as function parameters
-
-function calls still create a temp (that temp is then never used)
+function calls whose return values are not assigned to a variable still creates a Temp (the Temp is never subsequently used).
