@@ -15,3 +15,6 @@ AST, Environment, Semantic, IR, and Types packages
 
 THINGS THAT AREN'T PERFECT:
 function calls whose return values are not assigned to a variable still creates a Temp (the Temp is never subsequently used).
+
+CALL foo(T1T2); wasn't working, but
+T0 := CALL foo(T1T2); did work.

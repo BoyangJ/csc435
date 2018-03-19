@@ -43,11 +43,7 @@ public class IRCall extends IRInstruction
         Iterator<Temp> itr = arguments.iterator();
         while (itr.hasNext())
         {
-            argumentsString = argumentsString + String.format("T%d, ", itr.next().number);
-        }
-        if (!argumentsString.equals(""))
-        {
-            argumentsString = argumentsString.substring(0, argumentsString.length() - 2);
+            argumentsString = argumentsString + String.format("T%d", itr.next().number);
         }
 
         String ir = String.format("\t%sCALL %s(%s);", destString, funcName, argumentsString);
