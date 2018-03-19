@@ -16,9 +16,6 @@ public class TempFactory
 
     public Temp getTemp(Type t)
     {
-        // debug
-        System.out.println("handing out temp " + next);
-
         Temp newTemp = new Temp(t, next);
         TempsList[next] = newTemp;
         next++;
@@ -41,9 +38,6 @@ public class TempFactory
         {
             if (TempsList[i].name.equals(n))
             {
-                // debug
-                System.out.println("found in list of temps");
-
                 return TempsList[i];
             }
         }

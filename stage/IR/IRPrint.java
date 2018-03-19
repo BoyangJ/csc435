@@ -5,19 +5,28 @@ import Types.*;
 public class IRPrint extends IRInstruction
 {
     Temp operand;
+    Type type;
 
     String operator;
 
     public IRPrint(Temp o)
     {
         operand = o;
+        type = operand.type;
 
         String typeSpecifier;
-        if (operand.type instanceof BooleanType) { typeSpecifier = "Z"; }
-        else if (operand.type instanceof CharType) { typeSpecifier = "C"; }
-        else if (operand.type instanceof IntegerType) { typeSpecifier = "I"; }
-        else if (operand.type instanceof FloatType) { typeSpecifier = "F"; }
-        else if (operand.type instanceof StringType) { typeSpecifier = "U"; }
+
+        if (operand.type instanceof ArrayType)
+        {
+            ArrayType aType = (ArrayType)operand.type;
+            type = aType.type;
+        }
+
+        if (type instanceof BooleanType) { typeSpecifier = "Z"; }
+        else if (type instanceof CharType) { typeSpecifier = "C"; }
+        else if (type instanceof IntegerType) { typeSpecifier = "I"; }
+        else if (type instanceof FloatType) { typeSpecifier = "F"; }
+        else if (type instanceof StringType) { typeSpecifier = "U"; }
         else { typeSpecifier = "?"; }
 
         operator = "PRINT" + typeSpecifier;

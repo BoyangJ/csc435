@@ -50,7 +50,7 @@ public class IRCall extends IRInstruction
             argumentsString = argumentsString.substring(0, argumentsString.length() - 2);
         }
 
-        String ir = String.format("\t%sCALL %s(%s)", destString, funcName, argumentsString);
+        String ir = String.format("\t%sCALL %s(%s);", destString, funcName, argumentsString);
         
         return ir;
     }

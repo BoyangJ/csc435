@@ -18,7 +18,7 @@ public class IRVisitor implements TempVisitor
 
     Temp arrayIndexTemp;
 
-    boolean functionAsOperand;
+    // boolean functionAsOperand;
 
     public IRVisitor(String n)
     {
@@ -28,6 +28,7 @@ public class IRVisitor implements TempVisitor
 
     public Temp visit (Program p)
     {
+        System.out.println(String.format("PROG %s", prog.name));
         Iterator<Function> itr = p.functionList.iterator();
 
         // Add all function declarations to the function environment.
@@ -106,38 +107,26 @@ public class IRVisitor implements TempVisitor
     {
         if (es.expr != null)
         {
-            if (es.expr instanceof FunctionExpression)
-            {
-                functionAsOperand = false;
-                IRInstruction in;
+            // if (es.expr instanceof FunctionExpression)
+            // {
+            //     functionAsOperand = false;
+            //     IRInstruction in;
 
-                FunctionExpression e = (FunctionExpression)es.expr;
-                Iterator<Expression> itr = e.eList.eList.iterator();
-                Vector<Temp> argumentsList = new Vector<Temp>();
+            //     FunctionExpression e = (FunctionExpression)es.expr;
+            //     Iterator<Expression> itr = e.eList.eList.iterator();
+            //     Vector<Temp> argumentsList = new Vector<Temp>();
 
-                while(itr.hasNext())
-                {
-                    Temp argTemp;
-                    Expression argument = itr.next();
-                     
-                    if (isLiteral(argument))
-                    {
-                        argTemp = currentFunction.temps.getTemp(tempType);
-                        argument.accept(this);
-                        in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
-                        currentFunction.addIRInstruction(in);
-                    }
-                    else
-                    {
-                        argTemp = argument.accept(this);
-                    }
+            //     while(itr.hasNext())
+            //     {
+            //         Expression argument = itr.next();
+            //         Temp argTemp = argument.accept(this);
 
-                    argumentsList.add(argTemp);
-                }
+            //         argumentsList.add(argTemp);
+            //     }
 
-                in = new IRCall(e.id.name, argumentsList);
-                currentFunction.addIRInstruction(in);
-            }
+            //     in = new IRCall(e.id.name, argumentsList);
+            //     currentFunction.addIRInstruction(in);
+            // }
             return es.expr.accept(this);
         }
         return null;
@@ -149,19 +138,7 @@ public class IRVisitor implements TempVisitor
         IRLabel l1 = new IRLabel();
         IRLabel l2 = new IRLabel();
 
-        Temp t;
-
-        if (isLiteral(is.expr))
-        {
-            t = currentFunction.temps.getTemp(new BooleanType());
-            is.expr.accept(this);
-            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            t = is.expr.accept(this);
-        }
+        Temp t = is.expr.accept(this);
 
         // make new Temp to prevent overwriting a parameter or local
         Temp t2 = currentFunction.temps.getTemp(new BooleanType());
@@ -197,21 +174,9 @@ public class IRVisitor implements TempVisitor
         IRLabel l1 = new IRLabel();
         IRLabel l2 = new IRLabel();
 
-        Temp t;
+        Temp t = ws.expr.accept(this);
 
         currentFunction.addIRInstruction(l1);
-
-        if (isLiteral(ws.expr))
-        {
-            t = currentFunction.temps.getTemp(new BooleanType());
-            ws.expr.accept(this);
-            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            t = ws.expr.accept(this);
-        }
 
         // make new Temp to prevent overwriting a parameter or local
         Temp t2 = currentFunction.temps.getTemp(new BooleanType());
@@ -238,82 +203,109 @@ public class IRVisitor implements TempVisitor
     public Temp visit (PrintStatement ps)
     {
         IRInstruction in;
-        Temp t;
+        Temp t = ps.expr.accept(this);
+ 
+        // if (ps.expr instanceof FunctionExpression)
+        // {
+        //     functionAsOperand = true;
+        //     t = ps.expr.accept(this);
+        // }
+        // else 
+        // if (ps.expr instanceof ArrayExpression)
+        // {
+        //     t = ps.expr.accept(this);
+        //     ArrayExpression arrayExpr = (ArrayExpression)ps.expr;
+        //     Type arrayType = currentFunction.temps.lookup(arrayExpr.id.name).type;
 
-        if (isLiteral(ps.expr))
-        {
-            t = currentFunction.temps.getTemp(tempType);
-            ps.expr.accept(this);
-            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else if (ps.expr instanceof FunctionExpression)
-        {
-            functionAsOperand = true;
-            t = ps.expr.accept(this);
-        }
-        else
-        {
-            t = ps.expr.accept(this);
-        }
+        //     Temp expr = currentFunction.temps.getTemp(arrayType);
+        //     Temp arrayTemp = currentFunction.temps.lookup(arrayExpr.id.name);
+
+        //     in = new IRVarAssign(expr, arrayTemp, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+        //     currentFunction.addIRInstruction(in);
+
+        //     t = expr;
+        // }
+        // else
+        // {
+        //     t = ps.expr.accept(this);
+        // }
 
         in = new IRPrint(t);
         currentFunction.addIRInstruction(in);
 
-        return null;
+        return t;
     }
 
     public Temp visit (PrintlnStatement pls)
     {
         IRInstruction in;
-        Temp t;
+        Temp t = pls.expr.accept(this);
+ 
+        // if (pls.expr instanceof FunctionExpression)
+        // {
+        //     functionAsOperand = true;
+        //     t = pls.expr.accept(this);
+        // }
+        // else 
+        // if (pls.expr instanceof ArrayExpression)
+        // {
+        //     t = pls.expr.accept(this);
 
-        if (isLiteral(pls.expr))
-        {
-            t = currentFunction.temps.getTemp(tempType);
-            pls.expr.accept(this);
-            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else if (pls.expr instanceof FunctionExpression)
-        {
-            functionAsOperand = true;
-            t = pls.expr.accept(this);
-        }
-        else
-        {
-            t = pls.expr.accept(this);
-        }
+        //     ArrayExpression arrayExpr = (ArrayExpression)pls.expr;
+        //     Type arrayType = currentFunction.temps.lookup(arrayExpr.id.name).type;
+
+        //     Temp expr = currentFunction.temps.getTemp(arrayType);
+        //     Temp arrayTemp = currentFunction.temps.lookup(arrayExpr.id.name);
+
+        //     in = new IRVarAssign(expr, arrayTemp, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+        //     currentFunction.addIRInstruction(in);
+
+        //     t = expr;
+        // }
+        // else
+        // {
+        //     t = pls.expr.accept(this);
+        // }
 
         in = new IRPrintln(t);
         currentFunction.addIRInstruction(in);
 
-        return null;
+        return t;
     }
 
     public Temp visit (ReturnStatement rs)
     {
         IRInstruction in;
-        Temp t;
+        Temp t = rs.expr.accept(this);
 
         if (rs.expr != null)
         {
-            if (isLiteral(rs.expr))
-            {
-                t = currentFunction.temps.getTemp(tempType);
-                rs.expr.accept(this);
-                in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-                currentFunction.addIRInstruction(in);
-            }
-            else if (rs.expr instanceof FunctionExpression)
-            {
-                functionAsOperand = true;
-                t = rs.expr.accept(this);
-            }
-            else
-            {
-                t = rs.expr.accept(this);
-            }
+            // if (rs.expr instanceof FunctionExpression)
+            // {
+            //     functionAsOperand = true;
+            //     t = rs.expr.accept(this);
+            // }
+            // else 
+            // if (rs.expr instanceof ArrayExpression)
+            // {
+            //     t = rs.expr.accept(this);
+
+            //     ArrayExpression arrayExpr = (ArrayExpression)rs.expr;
+            //     Type arrayType = currentFunction.temps.lookup(arrayExpr.id.name).type;
+
+            //     Temp expr = currentFunction.temps.getTemp(arrayType);
+            //     Temp arrayTemp = currentFunction.temps.lookup(arrayExpr.id.name);
+
+            //     in = new IRVarAssign(expr, arrayTemp, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+            //     currentFunction.addIRInstruction(in);
+
+            //     t = expr;
+            // }
+            // else
+            // {
+            //     t = rs.expr.accept(this);
+            // }
+
             in = new IRReturn(t);
         }
         else 
@@ -324,6 +316,8 @@ public class IRVisitor implements TempVisitor
         currentFunction.addIRInstruction(in);
 
         return null;
+
+
     }
 
     public Temp visit (AssignmentStatement as)
@@ -331,73 +325,46 @@ public class IRVisitor implements TempVisitor
         IRInstruction in;
 
         Temp dest = currentFunction.temps.lookup(as.id.name);
+        Temp expr = as.expr.accept(this);
 
-        if (isLiteral(as.expr))
-        {
-            as.expr.accept(this);
-            in = new IRVarAssign(dest, assignmentVar, AssignmentType.CONSTANT);
-        }
-
-        // else if as.expr instanceof functionexpression
-        else if (as.expr instanceof FunctionExpression)
-        {
-            functionAsOperand = true;
-            Temp expr = as.expr.accept(this);
-            in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
-        }
-
-        else if (as.expr instanceof ArrayExpression)
-        {
-            Temp expr = as.expr.accept(this);
-            in = new IRVarAssign(dest, expr, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
-        }
-
-        else
-        {
-            Temp expr = as.expr.accept(this);
-            in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
-        }
+        // if (as.expr instanceof FunctionExpression)
+        // {
+        //     functionAsOperand = true;
+        //     expr = as.expr.accept(this);
+        //     in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
+        // }
+        // // else 
+        // if (as.expr instanceof ArrayExpression)
+        // {
+        //     expr = as.expr.accept(this);
+        //     in = new IRVarAssign(dest, expr, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+        // }
+        // else
+        // {
+        //     expr = as.expr.accept(this);
+        //     in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
+        // }
+        in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
         currentFunction.addIRInstruction(in);
 
-        return null;
+        return dest;
     }
     public Temp visit (ArrayAssignmentStatement aas)
     {
         IRInstruction in;
 
-        Temp dest = aas.arrayExpr.accept(this); 
-        Temp destIndex = arrayIndexTemp;
+        Temp dest = currentFunction.temps.lookup(aas.arrayExpr.id.name);
+        System.out.println("dest.number = " + dest.number);
+       
+        ArrayExpression aExpr = (ArrayExpression)aas.arrayExpr;
+        Temp arrayIndex = aExpr.expr.accept(this);
 
-        Temp expr;
+        Temp expr = aas.expr.accept(this);
 
-        if (isLiteral(aas.expr))
-        {
-            expr = currentFunction.temps.getTemp(tempType);
-            aas.expr.accept(this);
-            in = new IRVarAssign(expr, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-
-        else if (aas.expr instanceof ArrayExpression)
-        {
-            Temp yolo = currentFunction.temps.getTemp(dest.type.type);
-
-            expr = aas.expr.accept(this);
-            in = new IRVarAssign(yolo, expr, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
-            currentFunction.addIRInstruction(in);
-
-            expr = yolo;
-        }
-        
-        else
-        {
-            expr = aas.expr.accept(this);
-        }
-
-        in = new IRVarAssign(dest, destIndex, expr, AssignmentType.ARRAY_LEFT);
+        in = new IRVarAssign(dest, arrayIndex, expr, AssignmentType.ARRAY_LEFT);
         currentFunction.addIRInstruction(in);
 
-        return null;
+        return dest;
     }
 
     public Temp visit (Block b)
@@ -415,32 +382,19 @@ public class IRVisitor implements TempVisitor
     {
         IRInstruction in;
         Temp dest = currentFunction.temps.getTemp(new BooleanType());
-        Temp e1Temp;
-        Temp e2Temp;
+        Temp e1Temp = e.expr1.accept(this);
+        Temp e2Temp = e.expr2.accept(this);
 
-        if (isLiteral(e.expr1))
-        {
-            e1Temp = currentFunction.temps.getTemp(tempType);
-            e.expr1.accept(this);
-            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e1Temp = e.expr1.accept(this);
-        }
-
-        if (isLiteral(e.expr2))
-        {
-            e2Temp = currentFunction.temps.getTemp(tempType);
-            e.expr2.accept(this);
-            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e2Temp = e.expr2.accept(this);
-        }
+        // if (e.expr2 instanceof ArrayExpression)
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        //     in = new IRVarAssign(dest, e2Temp, arrayIndexTemp, AssignmentType.ARRAY_RIGHT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        // }
 
         in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryEquality), AssignmentType.BINARY_OP);
         currentFunction.addIRInstruction(in);
@@ -451,32 +405,32 @@ public class IRVisitor implements TempVisitor
     {
         IRInstruction in;
         Temp dest = currentFunction.temps.getTemp(new BooleanType());
-        Temp e1Temp;
-        Temp e2Temp;
+        Temp e1Temp = e.expr1.accept(this);
+        Temp e2Temp = e.expr2.accept(this);
 
-        if (isLiteral(e.expr1))
-        {
-            e1Temp = currentFunction.temps.getTemp(tempType);
-            e.expr1.accept(this);
-            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e1Temp = e.expr1.accept(this);
-        }
+        // if (isLiteral(e.expr1))
+        // {
+        //     e1Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr1.accept(this);
+        //     in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e1Temp = e.expr1.accept(this);
+        // }
 
-        if (isLiteral(e.expr2))
-        {
-            e2Temp = currentFunction.temps.getTemp(tempType);
-            e.expr2.accept(this);
-            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e2Temp = e.expr2.accept(this);
-        }
+        // if (isLiteral(e.expr2))
+        // {
+        //     e2Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr2.accept(this);
+        //     in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        // }
 
         in = new IRVarAssign(dest, new IRBinaryOP(e1Temp, e2Temp, BinaryOPType.IRBinaryLessThan), AssignmentType.BINARY_OP);
         currentFunction.addIRInstruction(in);
@@ -486,32 +440,32 @@ public class IRVisitor implements TempVisitor
     public Temp visit (AddExpression e)
     {
         IRInstruction in;
-        Temp e1Temp;
-        Temp e2Temp;
+        Temp e1Temp = e.expr1.accept(this);
+        Temp e2Temp = e.expr2.accept(this);
 
-        if (isLiteral(e.expr1))
-        {
-            e1Temp = currentFunction.temps.getTemp(tempType);
-            e.expr1.accept(this);
-            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e1Temp = e.expr1.accept(this);
-        }
+        // if (isLiteral(e.expr1))
+        // {
+        //     e1Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr1.accept(this);
+        //     in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e1Temp = e.expr1.accept(this);
+        // }
 
-        if (isLiteral(e.expr2))
-        {
-            e2Temp = currentFunction.temps.getTemp(tempType);
-            e.expr2.accept(this);
-            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e2Temp = e.expr2.accept(this);
-        }
+        // if (isLiteral(e.expr2))
+        // {
+        //     e2Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr2.accept(this);
+        //     in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        // }
 
         Temp dest = currentFunction.temps.getTemp(e1Temp.type);
 
@@ -523,32 +477,32 @@ public class IRVisitor implements TempVisitor
     public Temp visit (SubtractExpression e)
     {
         IRInstruction in;
-        Temp e1Temp;
-        Temp e2Temp;
+        Temp e1Temp = e.expr1.accept(this);
+        Temp e2Temp = e.expr2.accept(this);
 
-        if (isLiteral(e.expr1))
-        {
-            e1Temp = currentFunction.temps.getTemp(tempType);
-            e.expr1.accept(this);
-            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e1Temp = e.expr1.accept(this);
-        }
+        // if (isLiteral(e.expr1))
+        // {
+        //     e1Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr1.accept(this);
+        //     in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e1Temp = e.expr1.accept(this);
+        // }
 
-        if (isLiteral(e.expr2))
-        {
-            e2Temp = currentFunction.temps.getTemp(tempType);
-            e.expr2.accept(this);
-            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            e2Temp = e.expr2.accept(this);
-        }
+        // if (isLiteral(e.expr2))
+        // {
+        //     e2Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr2.accept(this);
+        //     in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        // }
 
         Temp dest = currentFunction.temps.getTemp(e1Temp.type);
 
@@ -560,42 +514,42 @@ public class IRVisitor implements TempVisitor
     public Temp visit (MultExpression e)
     {
         IRInstruction in;
-        Temp e1Temp;
-        Temp e2Temp;
+        Temp e1Temp = e.expr1.accept(this);
+        Temp e2Temp = e.expr2.accept(this);
 
-        if (isLiteral(e.expr1))
-        {
-            e1Temp = currentFunction.temps.getTemp(tempType);
-            e.expr1.accept(this);
-            in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else if (e.expr1 instanceof FunctionExpression)
-        {
-            functionAsOperand = true;
-            e1Temp = e.expr1.accept(this);
-        }
-        else
-        {
-            e1Temp = e.expr1.accept(this);
-        }
+        // if (isLiteral(e.expr1))
+        // {
+        //     e1Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr1.accept(this);
+        //     in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else if (e.expr1 instanceof FunctionExpression)
+        // {
+        //     functionAsOperand = true;
+        //     e1Temp = e.expr1.accept(this);
+        // }
+        // else
+        // {
+        //     e1Temp = e.expr1.accept(this);
+        // }
 
-        if (isLiteral(e.expr2))
-        {
-            e2Temp = currentFunction.temps.getTemp(tempType);
-            e.expr2.accept(this);
-            in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else if (e.expr2 instanceof FunctionExpression)
-        {
-            functionAsOperand = true;
-            e2Temp = e.expr2.accept(this);
-        }
-        else
-        {
-            e2Temp = e.expr2.accept(this);
-        }
+        // if (isLiteral(e.expr2))
+        // {
+        //     e2Temp = currentFunction.temps.getTemp(tempType);
+        //     e.expr2.accept(this);
+        //     in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else if (e.expr2 instanceof FunctionExpression)
+        // {
+        //     functionAsOperand = true;
+        //     e2Temp = e.expr2.accept(this);
+        // }
+        // else
+        // {
+        //     e2Temp = e.expr2.accept(this);
+        // }
 
         Temp dest = currentFunction.temps.getTemp(e1Temp.type);
 
@@ -608,19 +562,19 @@ public class IRVisitor implements TempVisitor
     public Temp visit (ParenExpression e)
     {
         IRInstruction in;
-        Temp eTemp;
+        Temp eTemp = e.expr.accept(this);
 
-        if (isLiteral(e.expr))
-        {
-            eTemp = currentFunction.temps.getTemp(tempType);
-            e.expr.accept(this);
-            in = new IRVarAssign(eTemp, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            eTemp = e.expr.accept(this);
-        }
+        // if (isLiteral(e.expr))
+        // {
+        //     eTemp = currentFunction.temps.getTemp(tempType);
+        //     e.expr.accept(this);
+        //     in = new IRVarAssign(eTemp, assignmentVar, AssignmentType.CONSTANT);
+        //     currentFunction.addIRInstruction(in);
+        // }
+        // else
+        // {
+        //     eTemp = e.expr.accept(this);
+        // }
 
         return eTemp;
     }
@@ -633,22 +587,17 @@ public class IRVisitor implements TempVisitor
     public Temp visit (ArrayExpression e)
     {
         IRInstruction in;
-        Temp t;
 
-        if (isLiteral(e.expr))
-        {
-            t = currentFunction.temps.getTemp(tempType);
-            e.expr.accept(this);
-            in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
-            currentFunction.addIRInstruction(in);
-        }
-        else
-        {
-            t = e.expr.accept(this);
-        }
+        Type arrayType = currentFunction.temps.lookup(e.id.name).type;
+        Temp dest = currentFunction.temps.getTemp(arrayType);
+        
+        Temp arrayTemp = currentFunction.temps.lookup(e.id.name);
+        Temp arrayIndex = e.expr.accept(this);
 
-        arrayIndexTemp = t;
-        return currentFunction.temps.lookup(e.id.name);
+        in = new IRVarAssign(dest, arrayTemp, arrayIndex, AssignmentType.ARRAY_RIGHT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
 
     public Temp visit (FunctionExpression e)
@@ -661,91 +610,75 @@ public class IRVisitor implements TempVisitor
 
         while(itr.hasNext())
         {
-            Temp argTemp;
             Expression argument = itr.next();
+            Temp argTemp = argument.accept(this);
              
-            if (isLiteral(argument))
-            {
-                argTemp = currentFunction.temps.getTemp(tempType);
-                argument.accept(this);
-                in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
-                currentFunction.addIRInstruction(in);
-            }
-            else
-            {
-                argTemp = argument.accept(this);
-            }
+            // if (isLiteral(argument))
+            // {
+            //     argTemp = currentFunction.temps.getTemp(tempType);
+            //     argument.accept(this);
+            //     in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
+            //     currentFunction.addIRInstruction(in);
+            // }
+            // else
+            // {
+            //     argTemp = argument.accept(this);
+            // }
 
             argumentsList.add(argTemp);
         }
-        if (functionAsOperand)
-        {
-            in = new IRCall(dest, e.id.name, argumentsList);
-            currentFunction.addIRInstruction(in);
-        }
+        
+        in = new IRCall(dest, e.id.name, argumentsList);
+        currentFunction.addIRInstruction(in);
 
-        functionAsOperand = false;
         return dest;
     }
 
     public Temp visit (IntegerLiteral i)
     {
-        assignmentVar = i.value.toString();
-        return null;
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new IntegerType());
+        in = new IRVarAssign(dest, i.value.toString(), AssignmentType.CONSTANT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
     public Temp visit (StringLiteral s)
     {
-        assignmentVar = s.value.toString();
-        return null;
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new StringType());
+        in = new IRVarAssign(dest, s.value.toString(), AssignmentType.CONSTANT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
     public Temp visit (FloatLiteral f)
     {
-        assignmentVar = f.value.toString();
-        return null;
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new FloatType());
+        in = new IRVarAssign(dest, f.value.toString(), AssignmentType.CONSTANT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
     public Temp visit (CharacterLiteral c)
     {
-        assignmentVar = c.value.toString();
-        return null;
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new CharType());
+        in = new IRVarAssign(dest, c.value.toString(), AssignmentType.CONSTANT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
     public Temp visit (BooleanLiteral b)
     {
-        assignmentVar = b.value.toString().toUpperCase();
-        return null;
+        IRInstruction in;
+        Temp dest = currentFunction.temps.getTemp(new BooleanType());
+        in = new IRVarAssign(dest, b.value.toString(), AssignmentType.CONSTANT);
+        currentFunction.addIRInstruction(in);
+
+        return dest;
     }
 
-
-    public boolean isLiteral(Expression e)
-    {
-        if (e instanceof IntegerLiteral)
-        {
-            tempType = new IntegerType();
-            return true;
-        } 
-        else if (e instanceof StringLiteral)
-        {
-            tempType = new StringType();
-            return true;
-        } 
-        else if (e instanceof FloatLiteral)
-        {
-            tempType = new FloatType();
-            return true;
-        }
-        else if (e instanceof CharacterLiteral)
-        {
-            tempType = new CharType();
-            return true;
-        } 
-        else if (e instanceof BooleanLiteral)
-        {
-            tempType = new BooleanType();
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
 
 }

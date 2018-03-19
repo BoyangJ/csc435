@@ -1,0 +1,42 @@
+void main() { } 
+
+int foo() { return 9; }
+
+int fiveparams(int i, float f, string s, char c, boolean b) 
+{
+	int g;
+	int[10] a;
+
+	//g = 1;
+	//g = foo();
+
+	//g = a[0];
+
+	//1 < a[4];
+	//a[4] < 1;
+
+	//a[0] = a[2];
+	foo();
+
+	//g = 1;
+	//g = a[2];
+	g = foo();
+
+	//a[6] = 1;
+	//a[7] = a[2];
+	a[8] = foo();
+
+	// good
+	//print 1;
+	//print a[0];
+	print foo();
+
+	//println 's';
+	//println a[5];
+	println foo();
+
+	return foo();
+
+	//if (foo()) { }
+	//b = a[2] == a[1];
+} 
