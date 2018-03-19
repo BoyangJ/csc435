@@ -41,6 +41,9 @@ public class IRVisitor implements TempVisitor
 
         f.body.accept(this);
 
+        IRInstruction in = new IRReturn();
+        currentFunction.addIRInstruction(in);
+
         return null;
     }
     public Temp visit (FunctionDeclaration fd)
@@ -215,8 +218,37 @@ public class IRVisitor implements TempVisitor
 
         return null;
     }
-    
-    public Temp visit (ReturnStatement e){return null;}
+
+    public Temp visit (ReturnStatement rs)
+    {
+        IRInstruction in;
+        Temp t;
+
+        if (rs.expr != null)
+        {
+            if (isLiteral(rs.expr))
+            {
+                t = currentFunction.temps.getTemp(tempType);
+                rs.expr.accept(this);
+                in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+                currentFunction.addIRInstruction(in);
+            }
+            else
+            {
+                t = rs.expr.accept(this);
+            }
+            in = new IRReturn(t);
+        }
+        else 
+        {
+            in = new IRReturn();
+        }
+
+        currentFunction.addIRInstruction(in);
+
+        return null;
+    }
+
     public Temp visit (AssignmentStatement as)
     {
         IRInstruction in;

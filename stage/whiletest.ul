@@ -1,4 +1,6 @@
-void main()
+void main() { return; }
+
+int foo() 
 {
 	int i;
 	string s;
@@ -10,6 +12,7 @@ void main()
 		i = i + 1;
 	}
 
-	println s;
+	println "ads";
+	return 10;
 } 
 
