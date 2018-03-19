@@ -13,22 +13,11 @@ enum BinaryOPType
 
 public class IRBinaryOP extends IRInstruction
 {
-    //Temp dest;
     Temp operand1;
     Temp operand2;
 
     BinaryOPType type;
     String operator;
-
-    /*
-    public IRBinaryOP(Temp d, Temp o1, Temp o2, BinaryOPType t)
-    {
-        dest = d;
-        operand1 = o1;
-        operand2 = o2;
-        type = t;
-    }
-    */
 
     public IRBinaryOP(Temp o1, Temp o2, BinaryOPType t)
     {
@@ -68,7 +57,8 @@ public class IRBinaryOP extends IRInstruction
 
     public String toString()
     {
-        // TODO: print (dest) := (operand1) (operand type)(binary op) (operand2)
-        return "";
+        String ir;
+        ir = String.format("\t%s %s %s;", operand1, operator, operand2);
+        return ir;
     }
 }

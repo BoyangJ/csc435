@@ -193,13 +193,43 @@ public class IRVisitor implements TempVisitor
     public Temp visit (PrintStatement ps)
     {
         IRInstruction in;
-        Temp t;
+        Temp t = ps.expr.accept(this);
 
         if (isLiteral(ps.expr))
         {
             t = currentFunction.temps.getTemp(tempType);
             ps.expr.accept(this);
             in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
+            currentFunction.addIRInstruction(in);
+        }
+        else if (ps.expr instanceof FunctionExpression)
+        {
+            FunctionExpression e = (FunctionExpression)ps.expr;
+            Iterator<Expression> itr = e.eList.eList.iterator();
+            Vector<Temp> argumentsList = new Vector<Temp>();
+
+            while(itr.hasNext())
+            {
+                Temp argTemp;
+                Expression argument = itr.next();
+                 
+                if (isLiteral(argument))
+                {
+                    argTemp = currentFunction.temps.getTemp(tempType);
+                    argument.accept(this);
+                    in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
+                    currentFunction.addIRInstruction(in);
+                }
+                else
+                {
+                    argTemp = argument.accept(this);
+                }
+
+                argumentsList.add(argTemp);
+            }
+
+            IRCall call = new IRCall(e.id.name, argumentsList);
+            in = new IRVarAssign(t, call, AssignmentType.FUNCTION_CALL);
             currentFunction.addIRInstruction(in);
         }
         else

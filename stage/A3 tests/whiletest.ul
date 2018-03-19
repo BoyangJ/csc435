@@ -1,0 +1,24 @@
+int foo(int a, int b, int c) 
+{
+	int i;
+	string s;
+	i = 0;
+
+	while (i < 5)
+	{
+		println i;
+		i = i + 1;
+	}
+
+	println "ads";
+	return 10;
+} 
+
+void main() 
+{
+	int i;
+
+	i = foo(0, 2, i);
+	foo(i, i, i);
+	return;
+}
