@@ -8,6 +8,8 @@ import Environment.*;
 
 public class IRVisitor implements TempVisitor
 {
+    ListEnvironment<String,Type> fEnv;
+
     IRProgram prog;
     IRFunction currentFunction;
 
@@ -16,15 +18,26 @@ public class IRVisitor implements TempVisitor
 
     Temp arrayIndexTemp;
 
+    boolean functionAsOperand;
+
     public IRVisitor(String n)
     {
         prog = new IRProgram(n);
+        fEnv = new ListEnvironment<String,Type>();
     }
 
     public Temp visit (Program p)
     {
         Iterator<Function> itr = p.functionList.iterator();
 
+        // Add all function declarations to the function environment.
+        while(itr.hasNext())
+        {
+            FunctionDeclaration fd = itr.next().decl;
+            fEnv.add(fd.name.name, fd.ctype.type);            
+        }
+
+        itr = p.functionList.iterator();
         while(itr.hasNext())
         {
             itr.next().accept(this);
@@ -93,6 +106,38 @@ public class IRVisitor implements TempVisitor
     {
         if (es.expr != null)
         {
+            if (es.expr instanceof FunctionExpression)
+            {
+                functionAsOperand = false;
+                IRInstruction in;
+
+                FunctionExpression e = (FunctionExpression)es.expr;
+                Iterator<Expression> itr = e.eList.eList.iterator();
+                Vector<Temp> argumentsList = new Vector<Temp>();
+
+                while(itr.hasNext())
+                {
+                    Temp argTemp;
+                    Expression argument = itr.next();
+                     
+                    if (isLiteral(argument))
+                    {
+                        argTemp = currentFunction.temps.getTemp(tempType);
+                        argument.accept(this);
+                        in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
+                        currentFunction.addIRInstruction(in);
+                    }
+                    else
+                    {
+                        argTemp = argument.accept(this);
+                    }
+
+                    argumentsList.add(argTemp);
+                }
+
+                in = new IRCall(e.id.name, argumentsList);
+                currentFunction.addIRInstruction(in);
+            }
             return es.expr.accept(this);
         }
         return null;
@@ -193,7 +238,7 @@ public class IRVisitor implements TempVisitor
     public Temp visit (PrintStatement ps)
     {
         IRInstruction in;
-        Temp t = ps.expr.accept(this);
+        Temp t;
 
         if (isLiteral(ps.expr))
         {
@@ -204,33 +249,8 @@ public class IRVisitor implements TempVisitor
         }
         else if (ps.expr instanceof FunctionExpression)
         {
-            FunctionExpression e = (FunctionExpression)ps.expr;
-            Iterator<Expression> itr = e.eList.eList.iterator();
-            Vector<Temp> argumentsList = new Vector<Temp>();
-
-            while(itr.hasNext())
-            {
-                Temp argTemp;
-                Expression argument = itr.next();
-                 
-                if (isLiteral(argument))
-                {
-                    argTemp = currentFunction.temps.getTemp(tempType);
-                    argument.accept(this);
-                    in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
-                    currentFunction.addIRInstruction(in);
-                }
-                else
-                {
-                    argTemp = argument.accept(this);
-                }
-
-                argumentsList.add(argTemp);
-            }
-
-            IRCall call = new IRCall(e.id.name, argumentsList);
-            in = new IRVarAssign(t, call, AssignmentType.FUNCTION_CALL);
-            currentFunction.addIRInstruction(in);
+            functionAsOperand = true;
+            t = ps.expr.accept(this);
         }
         else
         {
@@ -254,6 +274,11 @@ public class IRVisitor implements TempVisitor
             pls.expr.accept(this);
             in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
             currentFunction.addIRInstruction(in);
+        }
+        else if (pls.expr instanceof FunctionExpression)
+        {
+            functionAsOperand = true;
+            t = pls.expr.accept(this);
         }
         else
         {
@@ -279,6 +304,11 @@ public class IRVisitor implements TempVisitor
                 rs.expr.accept(this);
                 in = new IRVarAssign(t, assignmentVar, AssignmentType.CONSTANT);
                 currentFunction.addIRInstruction(in);
+            }
+            else if (rs.expr instanceof FunctionExpression)
+            {
+                functionAsOperand = true;
+                t = rs.expr.accept(this);
             }
             else
             {
@@ -311,32 +341,9 @@ public class IRVisitor implements TempVisitor
         // else if as.expr instanceof functionexpression
         else if (as.expr instanceof FunctionExpression)
         {
-            FunctionExpression e = (FunctionExpression)as.expr;
-            Iterator<Expression> itr = e.eList.eList.iterator();
-            Vector<Temp> argumentsList = new Vector<Temp>();
-
-            while(itr.hasNext())
-            {
-                Temp argTemp;
-                Expression argument = itr.next();
-                 
-                if (isLiteral(argument))
-                {
-                    argTemp = currentFunction.temps.getTemp(tempType);
-                    argument.accept(this);
-                    in = new IRVarAssign(argTemp, assignmentVar, AssignmentType.CONSTANT);
-                    currentFunction.addIRInstruction(in);
-                }
-                else
-                {
-                    argTemp = argument.accept(this);
-                }
-
-                argumentsList.add(argTemp);
-            }
-
-            IRCall call = new IRCall(e.id.name, argumentsList);
-            in = new IRVarAssign(dest, call, AssignmentType.FUNCTION_CALL);
+            functionAsOperand = true;
+            Temp expr = as.expr.accept(this);
+            in = new IRVarAssign(dest, expr, AssignmentType.TWO_OPERANDS);
         }
 
         else if (as.expr instanceof ArrayExpression)
@@ -563,6 +570,11 @@ public class IRVisitor implements TempVisitor
             in = new IRVarAssign(e1Temp, assignmentVar, AssignmentType.CONSTANT);
             currentFunction.addIRInstruction(in);
         }
+        else if (e.expr1 instanceof FunctionExpression)
+        {
+            functionAsOperand = true;
+            e1Temp = e.expr1.accept(this);
+        }
         else
         {
             e1Temp = e.expr1.accept(this);
@@ -574,6 +586,11 @@ public class IRVisitor implements TempVisitor
             e.expr2.accept(this);
             in = new IRVarAssign(e2Temp, assignmentVar, AssignmentType.CONSTANT);
             currentFunction.addIRInstruction(in);
+        }
+        else if (e.expr2 instanceof FunctionExpression)
+        {
+            functionAsOperand = true;
+            e2Temp = e.expr2.accept(this);
         }
         else
         {
@@ -636,9 +653,9 @@ public class IRVisitor implements TempVisitor
 
     public Temp visit (FunctionExpression e)
     {
-        System.out.println("function call found");
         IRInstruction in;
 
+        Temp dest = currentFunction.temps.getTemp(fEnv.lookup(e.id.name));
         Iterator<Expression> itr = e.eList.eList.iterator();
         Vector<Temp> argumentsList = new Vector<Temp>();
 
@@ -661,11 +678,14 @@ public class IRVisitor implements TempVisitor
 
             argumentsList.add(argTemp);
         }
+        if (functionAsOperand)
+        {
+            in = new IRCall(dest, e.id.name, argumentsList);
+            currentFunction.addIRInstruction(in);
+        }
 
-        in = new IRCall(e.id.name, argumentsList);
-        currentFunction.addIRInstruction(in);
-
-        return null;
+        functionAsOperand = false;
+        return dest;
     }
 
     public Temp visit (IntegerLiteral i)

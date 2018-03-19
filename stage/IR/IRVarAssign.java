@@ -10,10 +10,7 @@ enum AssignmentType
     UNARY_OP,
     BINARY_OP,
     ARRAY_LEFT,
-    ARRAY_RIGHT,
-
-    FUNCTION_CALL;
-
+    ARRAY_RIGHT;
     // TODO: bunch more
 }
 
@@ -31,7 +28,7 @@ public class IRVarAssign extends IRInstruction
 
     IRUnaryOP unaryOP;
     IRBinaryOP binaryOP;
-    IRCall call;
+    // IRCall call;
 
     AssignmentType type;
 
@@ -71,12 +68,12 @@ public class IRVarAssign extends IRInstruction
         type = t;
     }
 
-    public IRVarAssign(Temp d, IRCall c, AssignmentType t)
-    {
-        dest = d;
-        call = c;
-        type = t;
-    }
+    // public IRVarAssign(Temp d, IRCall c, AssignmentType t)
+    // {
+    //     dest = d;
+    //     call = c;
+    //     type = t;
+    // }
 
     public IRVarAssign(Temp d, Temp o1, Temp o2, AssignmentType t)
     {
@@ -93,7 +90,7 @@ public class IRVarAssign extends IRInstruction
         {
             // TODO: more cases
             case CONSTANT:
-                ir = String.format("\t%s := %s", dest, constant);
+                ir = String.format("\t%s := %s;", dest, constant);
                 break;
 
             case NEW_ARRAY:
@@ -105,11 +102,7 @@ public class IRVarAssign extends IRInstruction
                 break;
 
             case BINARY_OP:
-                ir = String.format("\t%s := %s %s %s", dest, binaryOP.operand1, binaryOP.operator, binaryOP.operand2);
-                break;
-
-            case FUNCTION_CALL:
-                ir = String.format("\t%s := %s;", dest, call.toString().substring(1, call.toString().length()));
+                ir = String.format("\t%s := %s %s %s;", dest, binaryOP.operand1, binaryOP.operator, binaryOP.operand2);
                 break;
 
             case ARRAY_LEFT:

@@ -19,6 +19,6 @@ void main()
 	int i;
 
 	i = foo(0, 2, i);
-	foo(i, i, i);
+	print foo(i, i, i);
 	return;
 }
