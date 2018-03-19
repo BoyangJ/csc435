@@ -429,7 +429,7 @@ public class IRVisitor implements TempVisitor
     {
         IRInstruction in;
         Temp dest = currentFunction.temps.getTemp(new BooleanType());
-        in = new IRVarAssign(dest, b.value.toString(), AssignmentType.CONSTANT);
+        in = new IRVarAssign(dest, b.value.toString().toUpperCase(), AssignmentType.CONSTANT);
         currentFunction.addIRInstruction(in);
 
         return dest;
