@@ -21,7 +21,7 @@ public class Compiler {
 			return;
 		}
 		else {
-			System.out.println("UL file: " + args[0]);
+			//System.out.println("UL file: " + args[0]);
 			input = new ANTLRInputStream(new FileInputStream(args[0]));
 		}
 

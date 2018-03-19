@@ -11,7 +11,7 @@ public class IRProgram
 
     public IRProgram(String n) 
     {
-        name = n;
+        name = n.substring(n.lastIndexOf("/")+1, n.lastIndexOf("."));
         functions = new Vector<IRFunction>();
     }
     
