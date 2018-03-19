@@ -35,8 +35,10 @@ int fiveparams(int i, float f, string s, char c, boolean b)
 	//println a[5];
 	println foo();
 
+	
+	//if (foo()) { }
+	b = a[2] == a[1];
+
 	return foo();
 
-	//if (foo()) { }
-	//b = a[2] == a[1];
 } 

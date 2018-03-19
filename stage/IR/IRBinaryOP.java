@@ -19,19 +19,27 @@ public class IRBinaryOP extends IRInstruction
     BinaryOPType type;
     String operator;
 
+    Type operandType;
+
     public IRBinaryOP(Temp o1, Temp o2, BinaryOPType t)
     {
         operand1 = o1;
         operand2 = o2;
+        operandType = operand1.type;
         type = t;
 
         String typeSpecifier;
-        if (operand1.type instanceof BooleanType) { typeSpecifier = "Z"; }
-        else if (operand1.type instanceof CharType) { typeSpecifier = "C"; }
-        else if (operand1.type instanceof IntegerType) { typeSpecifier = "I"; }
-        else if (operand1.type instanceof FloatType) { typeSpecifier = "F"; }
-        else if (operand1.type instanceof StringType) { typeSpecifier = "U"; }
+        if (operand1.type instanceof ArrayType)
+        {
+            ArrayType aType = (ArrayType)operand1.type;
+            operandType = aType.type;
+        }
 
+        if (operandType instanceof BooleanType) { typeSpecifier = "Z"; }
+        else if (operandType instanceof CharType) { typeSpecifier = "C"; }
+        else if (operandType instanceof IntegerType) { typeSpecifier = "I"; }
+        else if (operandType instanceof FloatType) { typeSpecifier = "F"; }
+        else if (operandType instanceof StringType) { typeSpecifier = "U"; }
         else { typeSpecifier = "?"; }
 
         switch (t)
