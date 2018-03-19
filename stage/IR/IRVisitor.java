@@ -13,10 +13,14 @@ public class IRVisitor implements TempVisitor
     IRProgram prog;
     IRFunction currentFunction;
 
+    boolean singleFuncCall;
+
     public IRVisitor(String n)
     {
         prog = new IRProgram(n);
         fEnv = new ListEnvironment<String,Type>();
+
+        singleFuncCall = false;
     }
 
     public Temp visit (Program p)
@@ -100,6 +104,10 @@ public class IRVisitor implements TempVisitor
     {
         if (es.expr != null)
         {
+            if (es.expr instanceof FunctionExpression)
+            {
+                singleFuncCall = true;
+            }
             return es.expr.accept(this);
         }
         return null;
@@ -147,9 +155,9 @@ public class IRVisitor implements TempVisitor
         IRLabel l1 = new IRLabel();
         IRLabel l2 = new IRLabel();
 
-        Temp t = ws.expr.accept(this);
-
         currentFunction.addIRInstruction(l1);
+
+        Temp t = ws.expr.accept(this);
 
         // make new Temp to prevent overwriting a parameter or local
         Temp t2 = currentFunction.temps.getTemp(new BooleanType());
@@ -338,7 +346,7 @@ public class IRVisitor implements TempVisitor
         IRInstruction in;
 
         Type arrayType = currentFunction.temps.lookup(e.id.name).type;
-        Temp dest = currentFunction.temps.getTemp(arrayType);
+        Temp dest = currentFunction.temps.getTemp(arrayType.type);
         
         Temp arrayTemp = currentFunction.temps.lookup(e.id.name);
         Temp arrayIndex = e.expr.accept(this);
@@ -365,8 +373,17 @@ public class IRVisitor implements TempVisitor
             argumentsList.add(argTemp);
         }
         
-        in = new IRCall(dest, e.id.name, argumentsList);
-        currentFunction.addIRInstruction(in);
+        if (singleFuncCall)
+        {
+            in = new IRCall(e.id.name, argumentsList);
+            currentFunction.addIRInstruction(in);
+            singleFuncCall = false;
+        }
+        else
+        {
+            in = new IRCall(dest, e.id.name, argumentsList);
+            currentFunction.addIRInstruction(in);
+        }
 
         return dest;
     }
@@ -402,7 +419,7 @@ public class IRVisitor implements TempVisitor
     {
         IRInstruction in;
         Temp dest = currentFunction.temps.getTemp(new CharType());
-        in = new IRVarAssign(dest, c.value.toString(), AssignmentType.CONSTANT);
+        in = new IRVarAssign(dest, String.format("\'%s\'",c.value.toString()), AssignmentType.CONSTANT);
         currentFunction.addIRInstruction(in);
 
         return dest;
