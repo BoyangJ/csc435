@@ -1,0 +1,25 @@
+void main()
+{
+
+}
+
+int foo (float b, int a, char c, string d, boolean e)
+{
+	int i;
+	int j;
+
+	a = i + j;
+	a = i - 88;
+	a = i * 99;
+	e = i == j;
+	e = i < j;
+
+	if (e) { } else { } 
+
+	while (e) { }
+
+	print a;
+	println a;
+
+	return a;
+}

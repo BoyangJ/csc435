@@ -13,12 +13,17 @@ public class IRFunction
     public Vector<IRInstruction> instr;
     TempFactory temps;
 
+    int endLabel;
+
     public IRFunction(FunctionDeclaration fd) 
     {
         name = fd.name.name;
         instr = new Vector<IRInstruction>();
         temps = new TempFactory();
         signature = "(";
+
+        temps.startLabel = IRProgram.labels++;
+        endLabel = IRProgram.labels++;
 
         // for every parameter in fd, create new temp with temps
         Iterator<FormalParameter> itr = fd.params.fpList.iterator();
@@ -71,7 +76,7 @@ public class IRFunction
         else if (t instanceof CharType) { typeSpecifier += "C"; }
         else if (t instanceof IntegerType) { typeSpecifier += "I"; }
         else if (t instanceof FloatType) { typeSpecifier += "F"; }
-        else if (t instanceof StringType) { typeSpecifier += "Ljava/lang/String"; }
+        else if (t instanceof StringType) { typeSpecifier += "Ljava/lang/String;"; }
         else if (t instanceof VoidType) { typeSpecifier += "V"; }
 
         return typeSpecifier;
@@ -86,7 +91,9 @@ public class IRFunction
         System.out.println(temps);
         */
 
-        System.out.println(String.format(".method public static %s(%s)"), name, signature);
+        System.out.println(String.format(".method public static %s%s", name, signature));
+        System.out.println(String.format("\t.limit locals %d", temps.getNumTemps()));
+        System.out.println(temps);
 
         Iterator<IRInstruction> itr = instr.iterator();
         while(itr.hasNext())
@@ -94,7 +101,9 @@ public class IRFunction
             System.out.println(itr.next());
         }
 
+        /* IR
         System.out.println("}");
+        */
 
         return "";
     }

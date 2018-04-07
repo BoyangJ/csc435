@@ -9,6 +9,8 @@ public class IRProgram
     String name;
     public Vector<IRFunction> functions;
 
+    public static int labels;
+
     public IRProgram(String n) 
     {
         name = n.substring(n.lastIndexOf("/")+1, n.lastIndexOf("."));

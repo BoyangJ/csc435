@@ -8,6 +8,8 @@ public class TempFactory
 
     Temp[] TempsList;
 
+    int startLabel;
+
     public TempFactory() 
     {
         next = 0;
@@ -43,6 +45,11 @@ public class TempFactory
         }
         return null;
     }
+
+    public int getNumTemps()
+    {
+        return next;
+    }
     
     public String toString() 
     {
@@ -54,20 +61,23 @@ public class TempFactory
             else if (TempsList[i].type instanceof CharType) { typeSpecifier = "C"; }
             else if (TempsList[i].type instanceof IntegerType) { typeSpecifier = "I"; }
             else if (TempsList[i].type instanceof FloatType) { typeSpecifier = "F"; }
-            else if (TempsList[i].type instanceof StringType) { typeSpecifier = "U"; }
+            else if (TempsList[i].type instanceof StringType) { typeSpecifier = "Ljava/lang/String;"; }
 
             else if (TempsList[i].type instanceof ArrayType)
             {
                 ArrayType varArrayType = (ArrayType)TempsList[i].type;
 
-                if (varArrayType.type instanceof BooleanType) { typeSpecifier = "AZ"; }
-                else if (varArrayType.type instanceof CharType) { typeSpecifier = "AC"; }
-                else if (varArrayType.type instanceof IntegerType) { typeSpecifier = "AI"; }
-                else if (varArrayType.type instanceof FloatType) { typeSpecifier = "AF"; }
-                else if (varArrayType.type instanceof StringType) { typeSpecifier = "AU"; }
+                if (varArrayType.type instanceof BooleanType) { typeSpecifier = "[Z"; }
+                else if (varArrayType.type instanceof CharType) { typeSpecifier = "[C"; }
+                else if (varArrayType.type instanceof IntegerType) { typeSpecifier = "[I"; }
+                else if (varArrayType.type instanceof FloatType) { typeSpecifier = "[F"; }
+                else if (varArrayType.type instanceof StringType) { typeSpecifier = "[Ljava/lang/String;"; }
             }
 
+            /* IR
             System.out.println(String.format("\tTEMP %d:%s;", i, typeSpecifier));
+            */
+            System.out.println(String.format("\t.var %d is T%d %s from L_%d to L_%d", i, i, typeSpecifier, startLabel, startLabel+1));
         }
         return "";
     }
