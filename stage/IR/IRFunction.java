@@ -71,7 +71,7 @@ public class IRFunction
         else if (t instanceof CharType) { typeSpecifier += "C"; }
         else if (t instanceof IntegerType) { typeSpecifier += "I"; }
         else if (t instanceof FloatType) { typeSpecifier += "F"; }
-        else if (t instanceof StringType) { typeSpecifier += "U"; }
+        else if (t instanceof StringType) { typeSpecifier += "Ljava/lang/String"; }
         else if (t instanceof VoidType) { typeSpecifier += "V"; }
 
         return typeSpecifier;
@@ -79,12 +79,14 @@ public class IRFunction
 
     public String toString() 
     {
-        // TODO: print "FUNC", then name, signature
+        /* IR 
         System.out.println(String.format("FUNC %s %s", name, signature));
         System.out.println("{");
 
-        // TODO: then print tempFactory, then print list of instructions
         System.out.println(temps);
+        */
+
+        System.out.println(String.format(".method public static %s(%s)"), name, signature);
 
         Iterator<IRInstruction> itr = instr.iterator();
         while(itr.hasNext())
