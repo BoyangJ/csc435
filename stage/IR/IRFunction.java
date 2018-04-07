@@ -79,14 +79,10 @@ public class IRFunction
 
     public String toString() 
     {
-        /* IR 
         System.out.println(String.format("FUNC %s %s", name, signature));
         System.out.println("{");
 
         System.out.println(temps);
-        */
-
-        System.out.println(String.format(".method public static %s(%s)"), name, signature);
 
         Iterator<IRInstruction> itr = instr.iterator();
         while(itr.hasNext())
