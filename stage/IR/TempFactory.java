@@ -71,16 +71,13 @@ public class TempFactory
                 else if (varArrayType.type instanceof CharType) { typeSpecifier = "[C"; }
                 else if (varArrayType.type instanceof IntegerType) { typeSpecifier = "[I"; }
                 else if (varArrayType.type instanceof FloatType) { typeSpecifier = "[F"; }
-                else if (varArrayType.type instanceof StringType) { typeSpecifier = IRInstruction.STRING_SPECIFIER; }
+                else if (varArrayType.type instanceof StringType) { typeSpecifier = "[" + IRInstruction.STRING_SPECIFIER; }
             }
 
             /* IR
             System.out.println(String.format("\tTEMP %d:%s;", i, typeSpecifier));
             */
             System.out.println(String.format("\t.var %d is T%d %s from L_%d to L_%d", i, i, typeSpecifier, startLabel, startLabel+1));
-
-            //debug
-            System.out.println(String.format("\t VAR %d has tempclass %s", i, TempsList[i].tempClass));
         }
         System.out.println("\t.limit stack 16");
         System.out.println(String.format("L_%d:", startLabel));
@@ -92,8 +89,8 @@ public class TempFactory
             if (TempsList[i].tempClass != TempClass.PARAMETERS)
             {
                 if (TempsList[i].type instanceof BooleanType) { jInstruction = "ldc 0"; jType = "i"; }
-                else if (TempsList[i].type instanceof CharType) { jInstruction = "lcd 0"; jType = "i"; }
-                else if (TempsList[i].type instanceof IntegerType) { jInstruction = "lcd 0"; jType = "i"; }
+                else if (TempsList[i].type instanceof CharType) { jInstruction = "ldc 0"; jType = "i"; }
+                else if (TempsList[i].type instanceof IntegerType) { jInstruction = "ldc 0"; jType = "i"; }
                 else if (TempsList[i].type instanceof FloatType) { jInstruction = "ldc 0.0"; jType = "f"; }
                 else if (TempsList[i].type instanceof StringType) { jInstruction = "aconst_null"; jType = "a"; }
                 else if (TempsList[i].type instanceof ArrayType) { jInstruction = "aconst_null"; jType = "a"; }

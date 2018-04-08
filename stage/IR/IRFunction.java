@@ -95,7 +95,14 @@ public class IRFunction
         System.out.println(temps);
         */
 
-        System.out.println(String.format(".method public static %s%s", name, signature));
+        if (name.equals("main"))
+        {
+            System.out.println(".method public static __main()V");
+        }
+        else
+        {
+            System.out.println(String.format(".method public static %s%s", name, signature));
+        }
         System.out.println(String.format("\t.limit locals %d", temps.getNumTemps()));
         System.out.println(temps);
 

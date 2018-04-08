@@ -1,3 +1,4 @@
+/*
 package IR;
 
 import Types.*;
@@ -17,6 +18,7 @@ public class IRNewArray extends IRInstruction
 
     public String toString()
     {
+        /* IR
         String ir;
 
         String typeSpecifier = "";
@@ -29,5 +31,21 @@ public class IRNewArray extends IRInstruction
         ir = String.format("\t%s := NEWARRAY %s %d;", dest, typeSpecifier, size);
         
         return ir;
+        *
+        System.out.println(String.format("\tldc %d", size));
+
+        if (type instanceof StringType)
+        {
+            System.out.println(String.format("\tanewarray java/lang/String"));
+        }
+        else
+        {
+            System.out.println(String.format("\tnewarray %s", type));
+        }
+
+        System.out.println(String.format("astore %d", dest.number));
+
+        return "";
     }
 }
+*/

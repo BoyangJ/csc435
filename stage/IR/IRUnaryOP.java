@@ -23,7 +23,7 @@ public class IRUnaryOP extends IRInstruction
 
     public String toString()
     {
-        // IR
+        /* IR
         switch (type)
         {
             case IRNegation:
@@ -32,6 +32,7 @@ public class IRUnaryOP extends IRInstruction
             case IRInvertBool:
                 System.out.println(String.format(";\t\t\t%s := Z! %s;", dest, operand));
         }
+        */
 
         switch (type)
         {

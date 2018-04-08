@@ -46,6 +46,9 @@ public class IRVisitor implements TempVisitor
         // TODO: last step - print prog
         System.out.println(prog);
 
+        // Program end Boilerplate
+        printEndBoilerplate();
+
         return null;
     }
     public Temp visit (Function f)
@@ -432,5 +435,28 @@ public class IRVisitor implements TempVisitor
         return dest;
     }
 
+    void printEndBoilerplate()
+    {
+        System.out.println(";--------------------------------------------;");
+        System.out.println(";                                            ;");
+        System.out.println("; Boilerplate                                ;");
+        System.out.println(";                                            ;");
+        System.out.println(";--------------------------------------------;");
+        System.out.println();
+        System.out.println(String.format(".method public static main([%s)V", IRInstruction.STRING_SPECIFIER));
+        System.out.println("\t; set limits used by this method");
+        System.out.println("\t.limit locals 1");
+        System.out.println("\t.limit stack 4");
+        System.out.println(String.format("\tinvokestatic %s/__main()V", prog.className));
+        System.out.println("\treturn");
+        System.out.println(".end method");
+        System.out.println();
+        System.out.println("; standard initializer");
+        System.out.println(".method public <init>()V");
+        System.out.println("\taload_0");
+        System.out.println("\tinvokenonvirtual java/lang/Object/<init>()V");
+        System.out.println("\treturn");
+        System.out.println(".end method");
+    }
 
 }
