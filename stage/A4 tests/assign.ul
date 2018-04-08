@@ -1,0 +1,14 @@
+void main() 
+{
+	int i;
+	float f;
+	char c;
+	string s;
+	boolean b;
+
+	i = 10;
+	f = 1.2;
+	c = 'a';
+	s = "good pupper";
+	b = false;
+}

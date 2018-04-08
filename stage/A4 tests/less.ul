@@ -1,0 +1,13 @@
+void main()
+{
+	int i;
+	float f;
+	char c;
+	string s;
+	boolean b;
+
+	b = i < i;
+	b = f < f;
+	b = c < c;
+	b = s < s;
+}

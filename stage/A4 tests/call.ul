@@ -1,0 +1,36 @@
+void main ()
+{
+	int a;
+	char c;
+	while (a == a)
+	{
+		first(a, true);
+		c = second(4.5, 's', "nope");
+		third();
+	}
+}
+
+int first(int a, boolean b)
+{
+	a = 10;
+	b = true;
+
+	if (b)
+	{
+		return a;
+	}
+	else 
+	{
+		return 9;
+	}
+}
+
+char second(float b, char c, string d)
+{
+	return '6';
+}
+
+void third()
+{
+	print 43434.22;
+}

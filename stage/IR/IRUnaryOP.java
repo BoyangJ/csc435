@@ -23,16 +23,27 @@ public class IRUnaryOP extends IRInstruction
 
     public String toString()
     {
-        String ir = "";
+        // IR
         switch (type)
         {
             case IRNegation:
                 break;
 
             case IRInvertBool:
-                ir = String.format("\t%s := Z! %s;", dest, operand);
+                System.out.println(String.format(";\t\t\t%s := Z! %s;", dest, operand));
         }
-        // TODO: print (dest) := (operand type)(unary op) (operand)
-        return ir;
+
+        switch (type)
+        {
+            case IRNegation:
+                break;
+
+            case IRInvertBool:
+                System.out.println(String.format("\tiload %d", operand.number));
+                System.out.println("\tlcd 1");
+                System.out.println("\tixor");
+                System.out.println(String.format("\tistore %d", dest.number));
+        }
+        return "";
     }
 }

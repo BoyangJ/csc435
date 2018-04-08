@@ -1,0 +1,13 @@
+void main() 
+{
+	int i;
+	float f;
+	char c;
+	string s;
+
+	i = i + i;
+	f = f + f;
+	c = c + c;
+	s = s + s;
+
+}

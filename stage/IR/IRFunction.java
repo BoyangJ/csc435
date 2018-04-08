@@ -22,6 +22,10 @@ public class IRFunction
         temps = new TempFactory();
         signature = "(";
 
+        /* IR
+        */
+        IRLabel.labels = 0;
+
         temps.startLabel = IRProgram.labels++;
         endLabel = IRProgram.labels++;
 
@@ -76,7 +80,7 @@ public class IRFunction
         else if (t instanceof CharType) { typeSpecifier += "C"; }
         else if (t instanceof IntegerType) { typeSpecifier += "I"; }
         else if (t instanceof FloatType) { typeSpecifier += "F"; }
-        else if (t instanceof StringType) { typeSpecifier += "Ljava/lang/String;"; }
+        else if (t instanceof StringType) { typeSpecifier += IRInstruction.STRING_SPECIFIER; }
         else if (t instanceof VoidType) { typeSpecifier += "V"; }
 
         return typeSpecifier;
@@ -100,6 +104,9 @@ public class IRFunction
         {
             System.out.println(itr.next());
         }
+
+        System.out.println(String.format("L_%d:", endLabel));
+        System.out.println(".end method");
 
         /* IR
         System.out.println("}");

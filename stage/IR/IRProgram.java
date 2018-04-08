@@ -6,14 +6,16 @@ import Types.*;
 
 public class IRProgram
 {
-    String name;
+    String sourceName;
+    String className;
     public Vector<IRFunction> functions;
 
     public static int labels;
 
     public IRProgram(String n) 
     {
-        name = n.substring(n.lastIndexOf("/")+1, n.lastIndexOf("."));
+        sourceName = n.substring(n.lastIndexOf("/")+1);
+        className = n.substring(n.lastIndexOf("/")+1, n.lastIndexOf("."));
         functions = new Vector<IRFunction>();
     }
     

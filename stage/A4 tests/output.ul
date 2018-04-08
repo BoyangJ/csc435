@@ -1,0 +1,54 @@
+void main() { }
+
+int foo()
+{
+	int a;
+	a = 10;
+
+	print a;
+	println a;
+	return a;
+}
+
+float f()
+{
+	float f;
+	return f;
+}
+
+char c()
+{
+	char c;
+	return c;
+}
+
+string s()
+{
+	string s;
+	return s;
+}
+
+boolean b()
+{
+	boolean b;
+	return b;
+}
+
+void bar()
+{
+	float f;
+	char c;
+	string s;
+	boolean b;
+
+	print f;
+	println f;
+	print c;
+	println c;
+	print s;
+	println s;
+	print b;
+	println b;
+
+	return;
+}

@@ -13,9 +13,11 @@ public class IRGoto extends IRInstruction
 
     public String toString()
     {
+        /* IR
         String ir = "";
         ir = String.format("\tGOTO L%d;", label.number);
-        // TODO: print (dest) := (operand1) (operand type)(binary op) (operand2)
-        return ir;
+        */
+        System.out.println(String.format("\tgoto LI%d", label.number));
+        return "";
     }
 }

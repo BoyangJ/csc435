@@ -21,7 +21,13 @@ public class IRVisitor implements TempVisitor
 
     public Temp visit (Program p)
     {
+        /* IR
         System.out.println(String.format("PROG %s", prog.name));
+        */
+        System.out.println(String.format(".source %s", prog.sourceName));
+        System.out.println(String.format(".class public %s", prog.className));
+        System.out.println(".super java/lang/Object");
+        System.out.println();
         Iterator<Function> itr = p.functionList.iterator();
 
         // Add all function declarations to the function environment.
@@ -198,10 +204,10 @@ public class IRVisitor implements TempVisitor
     public Temp visit (ReturnStatement rs)
     {
         IRInstruction in;
-        Temp t = rs.expr.accept(this);
 
         if (rs.expr != null)
         {
+            Temp t = rs.expr.accept(this);
             in = new IRReturn(t);
         }
         else 

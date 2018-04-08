@@ -20,8 +20,11 @@ public class IRLabel extends IRInstruction
 
     public String toString()
     {
-        // TODO: print L#:;
+        /* IR
         String label = String.format("L%d:;", number);
+        */
+
+        String label = String.format("LI%d:", number);
         return label;
     }
 }

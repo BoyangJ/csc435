@@ -1,0 +1,27 @@
+void main()
+{
+	int i;
+	float f;
+	char c;
+	string s;
+	boolean b;
+
+	i = 10;
+	f = 2.33;
+	c = 's';
+	s = "yes please";
+	b = false;
+}
+
+int[3] foo () {
+	int[3] a;
+	float[4] b;
+	char[5] c;
+	string[6] d;
+	boolean[7] e;
+
+	a[0] = 1;
+	a[1] = 2;
+	a[2] = 3;
+	return a;
+} 

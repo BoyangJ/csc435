@@ -85,12 +85,31 @@ public class IRVarAssign extends IRInstruction
 
     public String toString()
     {
+        String jType = "";
+        if (dest.type instanceof BooleanType) { jType = "i"; }
+        else if (dest.type instanceof CharType) { jType = "i"; }
+        else if (dest.type instanceof IntegerType) { jType = "i"; }
+        else if (dest.type instanceof FloatType) { jType = "f"; }
+        else if (dest.type instanceof StringType) { jType = "a"; }
+        else if (dest.type instanceof ArrayType) { jType = "a"; }
+
         String ir = "";
         switch (type)
         {
             // TODO: more cases
             case CONSTANT:
-                ir = String.format("\t%s := %s;", dest, constant);
+                //ir = String.format("\t%s := %s;", dest, constant);
+                if (dest.type instanceof CharType)
+                {
+                    constant = Integer.toString((int)constant.charAt(1));
+                }
+                else if (dest.type instanceof BooleanType)
+                {
+                    if (constant.equals("FALSE")) { constant = "0"; }
+                    else if (constant.equals("TRUE")) { constant = "1"; }
+                }
+                System.out.println(String.format("\tldc %s", constant));
+                System.out.println(String.format("\t%sstore %d", jType, dest.number));
                 break;
 
             case NEW_ARRAY:
@@ -98,11 +117,15 @@ public class IRVarAssign extends IRInstruction
                 break;
 
             case TWO_OPERANDS:
-                ir = String.format("\t%s := %s;", dest, operand1);
+                //ir = String.format("\t%s := %s;", dest, operand1);
+                System.out.println(String.format("\t%sload %d", jType, operand1.number));
+                System.out.println(String.format("\t%sstore %d", jType, dest.number));
                 break;
 
             case BINARY_OP:
-                ir = String.format("\t%s := %s %s %s;", dest, binaryOP.operand1, binaryOP.operator, binaryOP.operand2);
+                //ir = String.format("\t%s := %s %s %s;", dest, binaryOP.operand1, binaryOP.operator, binaryOP.operand2);
+                System.out.print(binaryOP);
+                System.out.println(String.format("\t%sstore %d", jType, dest.number));
                 break;
 
             case ARRAY_LEFT:
@@ -114,6 +137,6 @@ public class IRVarAssign extends IRInstruction
                 break;
         }
         // TODO: print (dest) := (operand1) (operand type)(binary op) (operand2)
-        return ir;
+        return "";
     }
 }
