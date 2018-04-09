@@ -11,23 +11,27 @@ public class IRCall extends IRInstruction
     String funcName;
     Vector<Temp> arguments;
 
+    String className;
+
     public IRCall(String n)
     {
         funcName = n;
         arguments = new Vector<Temp>();
     }
 
-    public IRCall(String n, Vector<Temp> t)
+    public IRCall(String n, Vector<Temp> t, String c)
     {
         funcName = n;
         arguments = t;
+        className = c;
     }
 
-    public IRCall(Temp d, String n, Vector<Temp> t)
+    public IRCall(Temp d, String n, Vector<Temp> t, String c)
     {
         dest = d;
         funcName = n;
         arguments = t;
+        className = c;
     }
 
     public String toString()
@@ -83,14 +87,14 @@ public class IRCall extends IRInstruction
             else if (dest.type instanceof StringType) { jDestType = "a"; jReturnType = STRING_SPECIFIER; }
             else if (dest.type instanceof VoidType) { jReturnType = "V"; }
             else { jDestType = "?"; jReturnType = "?"; }
-            System.out.println(String.format("\tinvokestatic call/%s(%s)%s", funcName, argumentsString, jReturnType));
+            System.out.println(String.format("\tinvokestatic %s/%s(%s)%s", className, funcName, argumentsString, jReturnType));
 
             // destination
             System.out.println(String.format("\t%sstore %d", jDestType, dest.number));
         }
         else
         {
-            System.out.println(String.format("\tinvokestatic call/%s(%s)V", funcName, argumentsString));
+            System.out.println(String.format("\tinvokestatic %s/%s(%s)V", className, funcName, argumentsString));
         }
 
         return "";

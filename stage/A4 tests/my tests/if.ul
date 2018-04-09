@@ -1,0 +1,9 @@
+void main() 
+{
+	int a;
+	boolean b;
+
+	if (b)	{
+		a = a + a;
+	}
+}

@@ -132,10 +132,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tiload %d", operand2.number));
                     System.out.println("\tisub");
                     System.out.println(String.format("\tiflt LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof FloatType)
@@ -144,10 +144,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tfload %d", operand2.number));
                     System.out.println("\tfcmpg");
                     System.out.println(String.format("\tiflt LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof CharType)
@@ -156,10 +156,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tiload %d", operand2.number));
                     System.out.println("\tisub");
                     System.out.println(String.format("\tiflt LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof StringType)
@@ -168,10 +168,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\taload %d", operand2.number));
                     System.out.println(String.format("\tinvokevirtual java/lang/String/compareTo(%s)I", STRING_SPECIFIER));
                     System.out.println(String.format("\tiflt LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 break;
@@ -185,10 +185,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tiload %d", operand2.number));
                     System.out.println("\tisub");
                     System.out.println(String.format("\tifeq LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof FloatType)
@@ -197,10 +197,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tfload %d", operand2.number));
                     System.out.println("\tfcmpg");
                     System.out.println(String.format("\tifeq LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof CharType)
@@ -209,10 +209,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tiload %d", operand2.number));
                     System.out.println("\tisub");
                     System.out.println(String.format("\tifeq LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof StringType)
@@ -221,10 +221,10 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\taload %d", operand2.number));
                     System.out.println(String.format("\tinvokevirtual java/lang/String/compareTo(%s)I", STRING_SPECIFIER));
                     System.out.println(String.format("\tifeq LJ_%d", jLabel1));
-                    System.out.println("\tlcd 0");
+                    System.out.println("\tldc 0");
                     System.out.println(String.format("\tgoto LJ_%d", jLabel2));
                     System.out.println(String.format("LJ_%d:", jLabel1));
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println(String.format("LJ_%d:", jLabel2));
                 }
                 else if (operandType instanceof BooleanType)
@@ -232,7 +232,7 @@ public class IRBinaryOP extends IRInstruction
                     System.out.println(String.format("\tiload %d", operand1.number));
                     System.out.println(String.format("\tiload %d", operand2.number));
                     System.out.println("\tixor");
-                    System.out.println("\tlcd 1");
+                    System.out.println("\tldc 1");
                     System.out.println("\tixor");
                 }
                 break;

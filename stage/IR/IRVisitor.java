@@ -376,13 +376,13 @@ public class IRVisitor implements TempVisitor
         
         if (fEnv.lookup(e.id.name) instanceof VoidType)
         {
-            in = new IRCall(e.id.name, argumentsList);
+            in = new IRCall(e.id.name, argumentsList, prog.className);
             currentFunction.addIRInstruction(in);
         }
         else
         {
             dest = currentFunction.temps.getTemp(fEnv.lookup(e.id.name));
-            in = new IRCall(dest, e.id.name, argumentsList);
+            in = new IRCall(dest, e.id.name, argumentsList, prog.className);
             currentFunction.addIRInstruction(in);
         }
 

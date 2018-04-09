@@ -1,20 +1,17 @@
 NAME: Boyang Jiao
 UVicID: V00800928
-DATE: Mar 19, 2018
+DATE: Apr 6, 2018
 COURSE: CSC 435
 
-Assignment 3
+Assignment 4
 
 Included in this assignment submission are the following:
 updated Compiler.java file
-various tests for A3
+various tests for A4
 makefile for easy compilation
 AST, Environment, Semantic, IR, and Types packages
-(IR Visitor found in the IR package)
+
+The Compiler program will produce jasmin instruction to standard output.
+Output can be piped to a .j file.
 
 
-THINGS THAT AREN'T PERFECT:
-function calls whose return values are not assigned to a variable still creates a Temp (the Temp is never subsequently used).
-
-CALL foo(T1T2); wasn't working, but
-T0 := CALL foo(T1T2); did work.

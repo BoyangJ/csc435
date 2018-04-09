@@ -41,7 +41,7 @@ public class IRUnaryOP extends IRInstruction
 
             case IRInvertBool:
                 System.out.println(String.format("\tiload %d", operand.number));
-                System.out.println("\tlcd 1");
+                System.out.println("\tldc 1");
                 System.out.println("\tixor");
                 System.out.println(String.format("\tistore %d", dest.number));
         }

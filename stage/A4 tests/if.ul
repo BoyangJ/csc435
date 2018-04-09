@@ -1,9 +1,14 @@
-void main() 
+void less (int x, int y)
 {
-	int a;
-	boolean b;
-
-	if (b)	{
-		a = a + a;
+	if (x < y)
+	{
+		print x;
+		print " is less than ";
 	}
+	println y;
+}
+
+void main()
+{
+	less(2,3);
 }

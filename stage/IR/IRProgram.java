@@ -7,7 +7,7 @@ import Types.*;
 public class IRProgram
 {
     String sourceName;
-    String className;
+    public String className;
     public Vector<IRFunction> functions;
 
     public static int labels;
